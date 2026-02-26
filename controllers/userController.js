@@ -75,4 +75,13 @@ async function login(req, res) {
     }
 }
 
-module.exports = { register, login }
+//logout
+async function logout(req, res) {
+    try {
+        return res.clearCookie(config.COOKIE_NAME, {path: '/'}).status(200).json({message: 'Sikeres kijelentkezés'})
+    } catch (err) {
+        return res.status(500).json({error: 'Hiba a kijelentkezés során'})
+    }
+}
+
+module.exports = { register, login, logout }
