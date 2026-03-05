@@ -5,7 +5,7 @@ function auth(req, res, next) {
     const token = req.cookies?.[config.COOKIE_NAME]
 
     if (!token) {
-        return res.status(401).json({errot: 'Nincs cookie'})
+        return res.status(401).json({error: 'Nincs cookie'})
     }
 
     try {

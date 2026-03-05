@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {config} = require('../config/dotenvConfig')
-const {findByEmail, createUser} = require('../models/userModel')
+const {findByEmail, createUser, updatePsw, getUserById, updateName} = require('../models/userModel')
 
 const cookieOpts = {
     httpOnly: true,
@@ -95,4 +95,43 @@ async function logout(req, res) {
     }
 }
 
-module.exports = { register, login, whoAmI, logout }
+//pswChange
+async function pswChange(req, res) {
+    try {
+        const userID = req.user.userID
+        const {psw, newPsw} = req.body
+        
+        const user = await getUserById(userID)
+
+        const match = bcrypt.compare(psw, user.psw)
+        if (!match) {
+            return res.status(400).json({error: "Hibás régi jelszó"})
+        }
+        //console.log(user.psw,newPsw);
+        const hash = await bcrypt.hash(newPsw, 10)
+        
+        await updatePsw(userID, hash)
+
+        res.status(201).json({message: "Sikeres jelszóváltoztatás"})
+    } catch (err) {
+        return res.status(500).json({error: 'Hiba a jelszó változtatás során'})
+    }
+}
+
+async function nameChange(req, res) {
+    try {
+        const userID = req.user.userID
+        const {username} = req.body
+
+        if (!username) {
+            return res.status(400).json({error: 'Kötelező megadni a nevet'})
+        }
+
+        await updateName(userID, username)
+        return res.status(201).json({message: 'Sikeres név változtatás'})
+    } catch (err) {
+        return res.status(500).json({error: "Hiba a név változtatás során"})
+    }
+}
+
+module.exports = { register, login, whoAmI, logout, pswChange, nameChange }
