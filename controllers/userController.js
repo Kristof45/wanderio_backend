@@ -75,6 +75,17 @@ async function login(req, res) {
     }
 }
 
+//whoami
+async function whoAmI(req, res) {
+    try {
+        const { user_id, username, email, role} = req.user
+        //console.log(user_id, username, email, role);
+        return res.status(200).json({user_id: user_id, username: username, email: email, role: role})
+    } catch (err) {
+        return res.status(500).json({error: 'whoAmI szerver oldali hiba'})
+    }
+}
+
 //logout
 async function logout(req, res) {
     try {
@@ -84,4 +95,4 @@ async function logout(req, res) {
     }
 }
 
-module.exports = { register, login, logout }
+module.exports = { register, login, whoAmI, logout }
