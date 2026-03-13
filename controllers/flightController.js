@@ -11,10 +11,17 @@ async function getallflights(req, res) {
     }
 }
 
-//flight kereses indulasi ido alapjan
+//flight kereses indulasi ido indulasi es erkezesi helyszin alapjan
 async function searchflight(req, res) {
     try {
-        const flights = await searchFlight(req.query.starting)
+        const { starting, departure, destination} = req.body
+        //console.log(starting, departure, destination);
+        if (!starting || !departure || !destination) {
+            return res.status(404).json({error: 'Tolts ki minden mezot'})
+        }
+
+        const flights = await searchFlight(starting, departure, destination)
+        //console.log(flights);
         return res.status(200).json(flights)
     } catch (err) {
         return res.status(500).json({error: 'Hiba a repülőjegyek keresésekor', err})
@@ -24,13 +31,13 @@ async function searchflight(req, res) {
 //uj flight letrehozasa
 async function createflight(req, res) {
     try {
-        const {airlineId, starting, arivval, price} = req.body
+        const {airlineId, starting, arivval, price, departure, destination} = req.body
         
-        if (!arivval|| !price) {
+        if (!airlineId || !starting || !arivval|| !price || !departure || !destination) {
             return res.status(400).json({error: 'Minden mezot tolts ki a uj repulojegy letrehozasahoz', err})
         }
 
-        const {insertId} = await createFlight(airlineId, starting, arivval, price)
+        const {insertId} = await createFlight(airlineId, starting, arivval, price, departure, destination)
 
         res.status(201).json({message: 'Sikeres repjegy letrehozas', insertId})
     } catch (err) {
@@ -42,10 +49,10 @@ async function createflight(req, res) {
 //egy meglevo flight modositasa
 async function updateflight(req, res) {
     try {
-        const {flightsId, airlineId, starting, arivval, price} = req.body
-        //console.log(flightsId, airlineId);
+        const {flightsId, airlineId, starting, arivval, price, departure, destination} = req.body
+        //console.log(flightsId, airlineId, starting, arivval, price, departure, destination);
 
-        await updateFlight(flightsId, airlineId, starting, arivval, price)
+        await updateFlight(flightsId, airlineId, starting, arivval, price, departure, destination)
         return res.status(201).json({message: 'Sikeres repjegy modositas'})
     } catch (err) {
         return res.status(500).json({error: 'Hiba a repülőjegy módosításakor', err})
