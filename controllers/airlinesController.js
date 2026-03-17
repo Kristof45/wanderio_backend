@@ -1,4 +1,15 @@
-const {createAirline, updateAirline, deleteAirline} = require('../models/airlineModel')
+const {getAirlines, createAirline, updateAirline, deleteAirline} = require('../models/airlineModel')
+
+//airline-ok lekerdezese
+async function getairlines(req, res) {
+    try {
+        const result = await getAirlines()
+
+        return res.status(200).json(result)
+    } catch (err) {
+        return res.status(500).json('Hiba az airline-ok lekerdezesekor')
+    }
+}
 
 //uj airline
 async function createairline(req, res) {
@@ -37,4 +48,4 @@ async function deleteairline(req, res) {
     }
 }
 
-module.exports = {createairline, updateairline, deleteairline}
+module.exports = {getairlines, createairline, updateairline, deleteairline}
