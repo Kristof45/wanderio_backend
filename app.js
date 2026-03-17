@@ -7,6 +7,7 @@ const app = express()
 const userRoutes=require('./routes/userRoutes')
 const flightRoutes = require('./routes/flightRoutes')
 const ticketOrdersRoutes = require('./routes/ticketOrdersRoutes')
+const airlinesRoutes = require('./routes/airlinesRoutes')
 
 app.use(express.json())
 app.use(cookieParser())
@@ -18,5 +19,6 @@ app.use(cors({
 app.use('/api/users', userRoutes)
 app.use('/api/flights', flightRoutes)
 app.use('/api/ticketorders', ticketOrdersRoutes)
+app.use('/api/airlines' , airlinesRoutes)
 
 module.exports = app

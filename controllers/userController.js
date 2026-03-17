@@ -65,7 +65,7 @@ async function login(req, res) {
             config.JWT_SECRET,
             {expiresIn: config.JWT_EXPIRES_IN}
         )
-        console.log(token);
+        //console.log(token);
 
         res.cookie(config.COOKIE_NAME, token, cookieOpts)
         
