@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {config} = require('../config/dotenvConfig')
-const {findByEmail, createUser, updatePsw, getUserById, updateName} = require('../models/userModel')
+const {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail} = require('../models/userModel')
 
 const cookieOpts = {
     httpOnly: true,
@@ -134,4 +134,20 @@ async function nameChange(req, res) {
     }
 }
 
-module.exports = { register, login, whoAmI, logout, pswChange, nameChange }
+async function emailChange(req, res) {
+    try {
+        const userID = req.user.userID
+        const {email} = req.body
+
+        if (!email) {
+            return res.status(400).json({error: 'Kötelező megadni az emailt'})
+        }
+
+        await updateEmail(userID, email)
+        return res.status(201).json({message: 'Sikeres email változtatás'})
+    } catch (err) {
+        return res.status(500).json({error: "Hiba az email változtatás során"})
+    }
+}
+
+module.exports = { register, login, whoAmI, logout, pswChange, nameChange, emailChange }
