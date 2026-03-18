@@ -33,4 +33,11 @@ async function updateName(userID, username) {
     return result
 }
 
-module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName}
+async function updateEmail(userID, email) {
+    const sql = 'UPDATE `users` SET`email`=? WHERE `userID`=?'
+    const [result] = await db.query(sql, [email, userID])
+
+    return result
+}
+
+module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail}

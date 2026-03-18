@@ -1,5 +1,5 @@
 const express = require('express')
-const {register, login, logout, whoAmI, pswChange, nameChange} = require('../controllers/userController')
+const {register, login, logout, whoAmI, pswChange, nameChange, emailChange} = require('../controllers/userController')
 const { auth } = require('../middleware/userMiddleware')
 
 const router = express.Router()
@@ -10,5 +10,6 @@ router.get('/whoami', auth, whoAmI)
 router.post('/logout', auth, logout)
 router.put('/pswchange', auth, pswChange)
 router.put('/namechange', auth, nameChange)
+router.put('/emailchange', auth, emailChange)
 
 module.exports = router

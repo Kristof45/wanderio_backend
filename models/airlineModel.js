@@ -1,5 +1,12 @@
 const db = require('../db/db')
 
+async function getAirlines() {
+    const sql = 'SELECT * FROM `airlines`'
+    const [result] = await db.query(sql)
+    
+    return result
+}
+
 async function createAirline(airline) {
     const sql = 'INSERT INTO `airlines`( `airline`) VALUES (?)'
     const [result] = await db.query(sql, [airline])
@@ -21,4 +28,4 @@ async function deleteAirline(airlineID) {
     return result
 }
 
-module.exports = {createAirline, updateAirline, deleteAirline}
+module.exports = {getAirlines, createAirline, updateAirline, deleteAirline}
