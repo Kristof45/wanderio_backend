@@ -7,9 +7,9 @@ async function getHotelOrd() {
     return result
 }
 
-async function createHotelOrd(userID, date, day, status) {
-    const sql = 'INSERT INTO `hotelorders` (`userID`, `date`, `day`, `status`) VALUES (?,?,?,?)'
-    const [result] = await db.query(sql, [userID, date, day, status])
+async function createHotelOrd(userID, hotelID, date, day, status) {
+    const sql = 'INSERT INTO `hotelorders` (`userID`, hotelID, `date`, `day`, `status`) VALUES (?,?,?,?,?)'
+    const [result] = await db.query(sql, [userID, hotelID, date, day, status])
 
     return result
 }

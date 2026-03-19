@@ -8,6 +8,7 @@ const userRoutes=require('./routes/userRoutes')
 const flightRoutes = require('./routes/flightRoutes')
 const ticketOrdersRoutes = require('./routes/ticketOrdersRoutes')
 const airlinesRoutes = require('./routes/airlinesRoutes')
+const hotelsRoutes = require('./routes/hotelsRoutes')
 
 const hotelOrdersRoutes = require('./routes/hotelOrdersRoutes')
 
@@ -24,5 +25,6 @@ app.use('/api/ticketorders', ticketOrdersRoutes)
 app.use('/api/airlines' , airlinesRoutes)
 
 app.use('/api/hotelorders', hotelOrdersRoutes)
+app.use('/api/hotels', hotelsRoutes)
 
 module.exports = app
