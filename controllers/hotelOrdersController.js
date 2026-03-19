@@ -13,9 +13,9 @@ async function gethotelord(req, res) {
 //uj hotel order letrehozas
 async function createhotelord(req, res) {
     try {
-        const {userID, date, day, status} = req.body
+        const {userID, hotelID, date, day, status} = req.body
 
-        const insertId = await createHotelOrd(userID, date, day, status)
+        const insertId = await createHotelOrd(userID, hotelID, date, day, status)
         return res.status(201).json({message: 'Sikeres hotel order leadas', insertId})
     } catch (err) {
         return res.status(500).json({error: 'Hiba hotel order letrehozasakor'})
