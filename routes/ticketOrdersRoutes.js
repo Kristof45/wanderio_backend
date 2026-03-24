@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/getticketorders', getticketorders)
 router.get('/getticketorder', getticketorder)
 router.post('/createticketorder', createticketorder)
-router.put('/updateticketstatus', updateticketstatus)
-router.delete('/deleteticketorder', deleteticketorder)
+router.put('/updateticketstatus/:orderID', updateticketstatus)
+router.delete('/deleteticketorder/:orderID', deleteticketorder)
 
 module.exports = router

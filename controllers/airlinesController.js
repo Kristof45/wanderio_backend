@@ -27,7 +27,8 @@ async function createairline(req, res) {
 //airline modositasa
 async function updateairline(req, res) {
     try {
-        const {airlineID,airline} = req.body
+        const airlineID = req.params.airlineID
+        const {airline} = req.body
 
         await updateAirline(airlineID,airline)
         return res.status(201).json('Sikeres airline modositas')
@@ -39,7 +40,7 @@ async function updateairline(req, res) {
 //airline torles
 async function deleteairline(req, res) {
     try {
-        const {airlineID} = req.body
+        const airlineID = req.params.airlineID
 
         await deleteAirline(airlineID)
         return res.status(200).json('Sikeres airline torles')
