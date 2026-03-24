@@ -6,7 +6,7 @@ const router = express.Router()
 router.get('/getallflights', getallflights)
 router.get('/searchflight', searchflight)
 router.post('/createflight', createflight)
-router.put('/updateflight', updateflight)
-router.delete('/deleteflight', deleteflight)
+router.put('/updateflight/:flightsId', updateflight)
+router.delete('/deleteflight/:flightsId', deleteflight)
 
 module.exports = router

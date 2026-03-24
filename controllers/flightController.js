@@ -49,7 +49,8 @@ async function createflight(req, res) {
 //egy meglevo flight modositasa
 async function updateflight(req, res) {
     try {
-        const {flightsId, airlineId, starting, arivval, price, departure, destination} = req.body
+        const flightsId = req.params.flightsId
+        const { airlineId, starting, arivval, price, departure, destination} = req.body
         //console.log(flightsId, airlineId, starting, arivval, price, departure, destination);
 
         await updateFlight(flightsId, airlineId, starting, arivval, price, departure, destination)
@@ -62,7 +63,7 @@ async function updateflight(req, res) {
 //egy meglevo flight torlese
 async function deleteflight(req, res) {
     try {
-        const {flightsId} = req.body
+        const flightsId = req.params.flightsId
         console.log(flightsId);
 
         await deleteFlight(flightsId)

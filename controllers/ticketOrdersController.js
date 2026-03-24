@@ -39,7 +39,8 @@ async function createticketorder(req, res) {
 //jegy rendeles status megvaltoztatas
 async function updateticketstatus(req, res) {
     try {
-        const { orderID, status } = req.body
+        const orderID = req.params.orderID
+        const { status } = req.body
         //console.log(orderID, status);
 
         await updateTicketStatus(orderID, status)
@@ -52,7 +53,8 @@ async function updateticketstatus(req, res) {
 //jegy rendeles torlese
 async function deleteticketorder(req, res) {
     try {
-        const { orderID, userID } = req.body
+        const orderID = req.params.orderID
+        const { userID } = req.body
         //console.log(orderID, userID);
         await deleteTicketOrder(orderID, userID)
         return res.status(200).json({message: 'Sikeres jegy rendeles torles'})
