@@ -14,9 +14,9 @@ async function gethotels(req, res) {
 async function createhotel(req, res) {
     try {
         
-        const {name, details, address} = req.body
+        const {cityID, name, details, address} = req.body
 
-        await createHotel(name, details, address)
+        await createHotel(cityID, name, details, address)
         return res.status(201).json({message: 'Hotel letrehozva'})
     } catch (err) {
         console.log(err);
@@ -28,8 +28,8 @@ async function createhotel(req, res) {
 async function updatehotel(req, res) {
     try {
         const hotelID = req.params.hotelID
-        const {name, details, address} = req.body
-        await updateHotel(hotelID, name, details, address)
+        const {cityID, name, details, address} = req.body
+        await updateHotel(cityID, hotelID, name, details, address)
         return res.status(201).json({message: 'Hotel adatok modositva'})
     } catch (err) {
         return res.status(500).json({error: 'Hiba a hotel modositasakor'})

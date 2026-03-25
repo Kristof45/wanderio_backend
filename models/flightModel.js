@@ -14,17 +14,17 @@ async function searchFlight(starting, departure, destination) {
     return result
 }
 
-async function createFlight(airlineId, starting, arivval, price, departure, destination) {
-    const sql = 'INSERT INTO `flights`(`airlineId`, `starting`, `arivval`, `price`, departure, destination) VALUES (?,?,?,?,?,?)'
-    const [result] = await db.query(sql, [airlineId, starting, arivval, price, departure, destination])
+async function createFlight(airlineId, starting, arivval, price, departureCityID, destinationCityID) {
+    const sql = 'INSERT INTO `flights`(`airlineId`, `starting`, `arivval`, `price`, departureCityID, destinationCityID) VALUES (?,?,?,?,?,?)'
+    const [result] = await db.query(sql, [airlineId, starting, arivval, price, departureCityID, destinationCityID])
 
     return result
 }
 
-async function updateFlight(flightsId, airlineId, starting, arivval, price, departure, destination) {
-    const sql = 'UPDATE `flights`SET `airlineId` = COALESCE(NULLIF(?, ""), `airlineId`), `starting` = COALESCE(NULLIF(?, ""), `starting`), `arivval` = COALESCE(NULLIF(?, ""), `arivval`),`price` = COALESCE(NULLIF(?, ""), `price`), departure = COALESCE(NULLIF(?, ""), `departure`), destination = COALESCE(NULLIF(?, ""), `destination`) WHERE `flightsId` = ?;'
+async function updateFlight(flightsId, airlineId, starting, arivval, price, departureCityID, destinationCityID) {
+    const sql = 'UPDATE `flights`SET `airlineId` = COALESCE(NULLIF(?, ""), `airlineId`), `starting` = COALESCE(NULLIF(?, ""), `starting`), `arivval` = COALESCE(NULLIF(?, ""), `arivval`),`price` = COALESCE(NULLIF(?, ""), `price`), departureCityID = COALESCE(NULLIF(?, ""), `departureCityID`), destinationCityID = COALESCE(NULLIF(?, ""), `destinationCityID`) WHERE `flightsId` = ?;'
     
-    const [result] = await db.query(sql, [airlineId, starting, arivval, price, departure, destination, flightsId])
+    const [result] = await db.query(sql, [airlineId, starting, arivval, price, departureCityID, destinationCityID, flightsId])
 
     return result
 }

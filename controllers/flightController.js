@@ -31,13 +31,13 @@ async function searchflight(req, res) {
 //uj flight letrehozasa
 async function createflight(req, res) {
     try {
-        const {airlineId, starting, arivval, price, departure, destination} = req.body
+        const {airlineId, starting, arivval, price, departureCityID, destinationCityID} = req.body
         
-        if (!airlineId || !starting || !arivval|| !price || !departure || !destination) {
+        if (!airlineId || !starting || !arivval|| !price || !departureCityID || !destinationCityID) {
             return res.status(400).json({error: 'Minden mezot tolts ki a uj repulojegy letrehozasahoz', err})
         }
 
-        const {insertId} = await createFlight(airlineId, starting, arivval, price, departure, destination)
+        const {insertId} = await createFlight(airlineId, starting, arivval, price, departureCityID, destinationCityID)
 
         res.status(201).json({message: 'Sikeres repjegy letrehozas', insertId})
     } catch (err) {
@@ -50,10 +50,10 @@ async function createflight(req, res) {
 async function updateflight(req, res) {
     try {
         const flightsId = req.params.flightsId
-        const { airlineId, starting, arivval, price, departure, destination} = req.body
-        //console.log(flightsId, airlineId, starting, arivval, price, departure, destination);
+        const { airlineId, starting, arivval, price, departureCityID, destinationCityID} = req.body
+        //console.log(flightsId, airlineId, starting, arivval, price, departureCityID, destinationCityID);
 
-        await updateFlight(flightsId, airlineId, starting, arivval, price, departure, destination)
+        await updateFlight(flightsId, airlineId, starting, arivval, price, departureCityID, destinationCityID)
         return res.status(201).json({message: 'Sikeres repjegy modositas'})
     } catch (err) {
         return res.status(500).json({error: 'Hiba a repülőjegy módosításakor', err})
@@ -64,7 +64,7 @@ async function updateflight(req, res) {
 async function deleteflight(req, res) {
     try {
         const flightsId = req.params.flightsId
-        console.log(flightsId);
+        //console.log(flightsId);
 
         await deleteFlight(flightsId)
         return res.status(200).json({message: 'Sikeresen töröltél egy repjegyet'})
