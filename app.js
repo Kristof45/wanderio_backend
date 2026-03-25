@@ -9,6 +9,8 @@ const flightRoutes = require('./routes/flightRoutes')
 const ticketOrdersRoutes = require('./routes/ticketOrdersRoutes')
 const airlinesRoutes = require('./routes/airlinesRoutes')
 const hotelsRoutes = require('./routes/hotelsRoutes')
+const citiesRoutes = require('./routes/citiesRoutes')
+const attractionsRoutes = require('./routes/attractionsRoutes')
 
 const hotelOrdersRoutes = require('./routes/hotelOrdersRoutes')
 
@@ -23,7 +25,8 @@ app.use('/api/users', userRoutes)
 app.use('/api/flights', flightRoutes)
 app.use('/api/ticketorders', ticketOrdersRoutes)
 app.use('/api/airlines' , airlinesRoutes)
-
+app.use('/api/cities', citiesRoutes)
+app.use('/api/attractions', attractionsRoutes)
 app.use('/api/hotelorders', hotelOrdersRoutes)
 app.use('/api/hotels', hotelsRoutes)
 

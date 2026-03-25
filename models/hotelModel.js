@@ -7,16 +7,16 @@ async function getHotels() {
     return result
 }
 
-async function createHotel(name, details, address) {
-    const sql = 'INSERT INTO `hotels`( `name`, `details`, `address`) VALUES (?, ?, ?)'
-    const [result] = await db.query(sql, [name, details, address])
+async function createHotel(cityID, name, details, address) {
+    const sql = 'INSERT INTO `hotels`(cityID, `name`, `details`, `address`) VALUES (?, ?, ?, ?)'
+    const [result] = await db.query(sql, [cityID, name, details, address])
     
     return result
 }
 
-async function updateHotel(hotelID, name, details, address) {
-    const sql = 'UPDATE `hotels` SET `name`= COALESCE(NULLIF (?, ""), `name`), `details`= COALESCE(NULLIF (?, ""), `details`), `address`= COALESCE(NULLIF (?, ""), `address`) WHERE `hotelID` = ?'
-    const [result] = await db.query(sql, [name, details, address, hotelID])
+async function updateHotel(cityID, hotelID, name, details, address) {
+    const sql = 'UPDATE `hotels` SET cityID = COALESCE(NULLIF (?, ""), `cityID`), `name`= COALESCE(NULLIF (?, ""), `name`), `details`= COALESCE(NULLIF (?, ""), `details`), `address`= COALESCE(NULLIF (?, ""), `address`) WHERE `hotelID` = ?'
+    const [result] = await db.query(sql, [cityID, name, details, address, hotelID])
     
     return result
 }
