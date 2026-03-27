@@ -10,7 +10,7 @@ async function getAttractions() {
 //attractions osszekotve a attractionImg vel
 
 async function getAttractionsImg(){
-    const sql ='SELECT attractions.name, attractionimage.name AS nameImg, attractions.description, attractions.price FROM `attractions` INNER JOIN attractionimage ON attractions.attractionID = attractionimage.attractionID WHERE 1;'
+    const sql ='SELECT attractions.name, attractionimage.name AS nameImg, attractions.description, attractions.price FROM `attractions` INNER JOIN attractionimage ON attractions.attractionID = attractionimage.attractionID INNER JOIN cities ON attractions.cityID = cities.cityID;'
     const [result] = await db.query(sql)
 
     return result

@@ -1,4 +1,17 @@
-const {getHotels, createHotel, updateHotel, deleteHotel} = require('../models/hotelModel')
+const {getHotelTypes,getHotels, createHotel, updateHotel, deleteHotel} = require('../models/hotelModel')
+
+
+//hotelek lekerese type es ar alapjan
+
+async function gethoteltypes(req,res){
+    try {
+        const result = await getHotelTypes()
+        return res.status(200).json(result)
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({error: 'Hiba a hoteltype lekeresekor'})
+    }
+}
 
 //hotelek lekerese
 async function gethotels(req, res) {
@@ -47,4 +60,4 @@ async function deletehotel(req, res) {
     }
 }
 
-module.exports = {gethotels, createhotel, updatehotel, deletehotel}
+module.exports = {gethoteltypes,gethotels, createhotel, updatehotel, deletehotel}
