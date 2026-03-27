@@ -1,4 +1,4 @@
-const {getAttractions, createAtt, updateAtt, deleteAtt} = require('../models/attractionModel')
+const {getAttractions, createAtt, updateAtt, deleteAtt, getAttractionsImg} = require('../models/attractionModel')
 
 async function getattractions(req, res) {
     try {
@@ -6,6 +6,16 @@ async function getattractions(req, res) {
         return res.status(200).json(result)
     } catch (err) {
         return res.status(500).json({error: 'Hiba az atrakciok lekeresekor'})
+    }
+}
+
+//attractions osszekotve a attractionImg vel
+async function getattractionsimg(req,res){
+    try {
+        const result = await getAttractionsImg()
+        return res.status(200).json(result)
+    } catch (err) {
+        return res.status(500).json({error:'Hiba a attImg lekeresekor'})
     }
 }
 
@@ -41,4 +51,4 @@ async function deleteatt(req, res) {
     }
 }
 
-module.exports = {getattractions, createatt, updateatt, deleteatt}
+module.exports = {getattractions, createatt, updateatt, deleteatt,getattractionsimg}

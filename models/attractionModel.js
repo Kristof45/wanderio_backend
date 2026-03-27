@@ -7,6 +7,15 @@ async function getAttractions() {
     return result
 }
 
+//attractions osszekotve a attractionImg vel
+
+async function getAttractionsImg(){
+    const sql ='SELECT attractions.name, attractionimage.name AS nameImg, attractions.description, attractions.price FROM `attractions` INNER JOIN attractionimage ON attractions.attractionID = attractionimage.attractionID WHERE 1;'
+    const [result] = await db.query(sql)
+
+    return result
+}
+
 async function createAtt(cityID, name, description, address, price, image) {
     const sql = 'INSERT INTO `attractions`( `cityID`, `name`, `description`, `address`, `price`, `image`) VALUES (?,?,?,?,?,?)'
     const [result] = await db.query(sql, [cityID, name, description, address, price, image])
@@ -28,4 +37,4 @@ async function deleteAtt(attractionID) {
     return result 
 }
 
-module.exports = {getAttractions, createAtt, updateAtt, deleteAtt}
+module.exports = {getAttractions, getAttractionsImg, createAtt, updateAtt, deleteAtt}

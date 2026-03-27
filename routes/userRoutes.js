@@ -1,9 +1,10 @@
 const express = require('express')
-const {register, login, logout, whoAmI, pswChange, nameChange, emailChange} = require('../controllers/userController')
+const {alluser,register, login, logout, whoAmI, pswChange, nameChange, emailChange} = require('../controllers/userController')
 const { auth } = require('../middleware/userMiddleware')
 
 const router = express.Router()
 
+router.get('/alluser', alluser)
 router.post('/register', register)
 router.post('/login', login)
 router.get('/whoami', auth, whoAmI)

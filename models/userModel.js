@@ -1,5 +1,12 @@
 const db = require('../db/db.js')
 
+async function getAllUser(){
+    const sql = 'SELECT `userID`,`username`,`email`,`role` FROM `users`'
+
+    const [result] = await db.query(sql)
+    return result
+}
+
 async function findByEmail(email) {
     const sql = 'SELECT * FROM `users` WHERE `email`=?'
     const [result] = await db.query(sql, [email])
@@ -40,4 +47,4 @@ async function updateEmail(userID, email) {
     return result
 }
 
-module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail}
+module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail,getAllUser}
