@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {config} = require('../config/dotenvConfig')
-const {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail} = require('../models/userModel')
+const { config } = require('../config/dotenvConfig')
+const { getAllUser, findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail } = require('../models/userModel')
+
 
 const cookieOpts = {
     httpOnly: true,
@@ -11,10 +12,22 @@ const cookieOpts = {
     maxAge: 1000 * 60 * 60 * 24 * 7
 }
 
+//allUser
+
+async function alluser(req, res) {
+    try {
+        const result = await getAllUser()
+
+        return res.status(200).json(result)
+    } catch (err) {
+        return res.status(500).json({ error: 'Hiba a felhasznalo lekereseben.', err })
+    }
+}
+
 //registration
 async function register(req, res) {
     try {
-        const {email, username, psw} = req.body
+        const { email, username, psw } = req.body
         //console.log(email, username, psw);
 
         if (!email || !username || !psw) {
@@ -34,18 +47,18 @@ async function register(req, res) {
 
         return res.status(201).json({ message: 'Sikeres regisztracio', insertId })
     } catch (err) {
-        return res.status(500).json({error: 'Regisztracios hiba', err})
+        return res.status(500).json({ error: 'Regisztracios hiba', err })
     }
 }
 
 //login
 async function login(req, res) {
     try {
-        const { email, psw} = req.body
+        const { email, psw } = req.body
         //console.log(email, psw);
 
-        if (!email || ! psw) {
-            return res.status(400).json({error: 'Email es jelszo kotelezo'})
+        if (!email || !psw) {
+            return res.status(400).json({ error: 'Email es jelszo kotelezo' })
         }
 
         const exists = await findByEmail(email)
@@ -58,40 +71,40 @@ async function login(req, res) {
         const ok = await bcrypt.compare(psw, exists.psw)
         //console.log(ok);
         if (!ok) {
-            return res.status(401).json({error: 'Hibas jelszo'})
+            return res.status(401).json({ error: 'Hibas jelszo' })
         }
 
-        const token = jwt.sign({ userID: exists.userID, username: exists.username, email: exists.email, role: exists.role},
+        const token = jwt.sign({ userID: exists.userID, username: exists.username, email: exists.email, role: exists.role },
             config.JWT_SECRET,
-            {expiresIn: config.JWT_EXPIRES_IN}
+            { expiresIn: config.JWT_EXPIRES_IN }
         )
         //console.log(token);
 
         res.cookie(config.COOKIE_NAME, token, cookieOpts)
-        
-        return res.status(200).json({message: 'Sikeres login'})
+
+        return res.status(200).json({ message: 'Sikeres login' })
     } catch (err) {
-        return res.status(500).json({error: 'Belépési hiba', err})
+        return res.status(500).json({ error: 'Belépési hiba', err })
     }
 }
 
 //whoami
 async function whoAmI(req, res) {
     try {
-        const { user_id, username, email, role} = req.user
+        const { user_id, username, email, role } = req.user
         //console.log(user_id, username, email, role);
-        return res.status(200).json({user_id: user_id, username: username, email: email, role: role})
+        return res.status(200).json({ user_id: user_id, username: username, email: email, role: role })
     } catch (err) {
-        return res.status(500).json({error: 'whoAmI szerver oldali hiba'})
+        return res.status(500).json({ error: 'whoAmI szerver oldali hiba' })
     }
 }
 
 //logout
 async function logout(req, res) {
     try {
-        return res.clearCookie(config.COOKIE_NAME, {path: '/'}).status(200).json({message: 'Sikeres kijelentkezés'})
+        return res.clearCookie(config.COOKIE_NAME, { path: '/' }).status(200).json({ message: 'Sikeres kijelentkezés' })
     } catch (err) {
-        return res.status(500).json({error: 'Hiba a kijelentkezés során'})
+        return res.status(500).json({ error: 'Hiba a kijelentkezés során' })
     }
 }
 
@@ -99,55 +112,55 @@ async function logout(req, res) {
 async function pswChange(req, res) {
     try {
         const userID = req.user.userID
-        const {psw, newPsw} = req.body
-        
+        const { psw, newPsw } = req.body
+
         const user = await getUserById(userID)
 
         const match = bcrypt.compare(psw, user.psw)
         if (!match) {
-            return res.status(400).json({error: "Hibás régi jelszó"})
+            return res.status(400).json({ error: "Hibás régi jelszó" })
         }
         //console.log(user.psw,newPsw);
         const hash = await bcrypt.hash(newPsw, 10)
-        
+
         await updatePsw(userID, hash)
 
-        res.status(201).json({message: "Sikeres jelszóváltoztatás"})
+        res.status(201).json({ message: "Sikeres jelszóváltoztatás" })
     } catch (err) {
-        return res.status(500).json({error: 'Hiba a jelszó változtatás során'})
+        return res.status(500).json({ error: 'Hiba a jelszó változtatás során' })
     }
 }
 
 async function nameChange(req, res) {
     try {
         const userID = req.user.userID
-        const {username} = req.body
+        const { username } = req.body
 
         if (!username) {
-            return res.status(400).json({error: 'Kötelező megadni a nevet'})
+            return res.status(400).json({ error: 'Kötelező megadni a nevet' })
         }
 
         await updateName(userID, username)
-        return res.status(201).json({message: 'Sikeres név változtatás'})
+        return res.status(201).json({ message: 'Sikeres név változtatás' })
     } catch (err) {
-        return res.status(500).json({error: "Hiba a név változtatás során"})
+        return res.status(500).json({ error: "Hiba a név változtatás során" })
     }
 }
 
 async function emailChange(req, res) {
     try {
         const userID = req.user.userID
-        const {email} = req.body
+        const { email } = req.body
 
         if (!email) {
-            return res.status(400).json({error: 'Kötelező megadni az emailt'})
+            return res.status(400).json({ error: 'Kötelező megadni az emailt' })
         }
 
         await updateEmail(userID, email)
-        return res.status(201).json({message: 'Sikeres email változtatás'})
+        return res.status(201).json({ message: 'Sikeres email változtatás' })
     } catch (err) {
-        return res.status(500).json({error: "Hiba az email változtatás során"})
+        return res.status(500).json({ error: "Hiba az email változtatás során" })
     }
 }
 
-module.exports = { register, login, whoAmI, logout, pswChange, nameChange, emailChange }
+module.exports = { alluser, register, login, whoAmI, logout, pswChange, nameChange, emailChange }
