@@ -1,5 +1,12 @@
 const db = require('../db/db')
 
+async function getHotelTypes(){
+    const sql= 'SELECT hotelimage.hotelImg, hotels.name, hotels.details, rooms.guests,rooms.price, roomtypes.type FROM `hotels` INNER JOIN hotelimage ON hotels.hotelID = hotelimage.hotelID INNER JOIN rooms ON hotels.hotelID= rooms.hotelID INNER JOIN roomtypes ON rooms.typeId = roomtypes.typeId INNER JOIN cities ON hotels.cityID = cities.cityID;'
+    const  [result] = await db.query(sql)
+
+    return result
+}
+
 async function getHotels() {
     const sql = 'SELECT * FROM `hotels`'
     const [result] = await db.query(sql)
@@ -28,4 +35,4 @@ async function deleteHotel(hotelID) {
     return result
 }
 
-module.exports = {getHotels, createHotel, updateHotel, deleteHotel}
+module.exports = {getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel}
