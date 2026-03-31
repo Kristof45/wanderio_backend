@@ -28,4 +28,11 @@ async function deleteCity(cityID) {
     return result
 }
 
-module.exports = {getCities, createCity, updateCity, deleteCity}
+async function getCitiesById(cityID){
+    const sql ='SELECT * FROM cities WHERE cityID=?'
+    const [result] = await db.query(sql, cityID)
+
+    return result
+}
+
+module.exports = {getCities, createCity, updateCity, deleteCity, getCitiesById}

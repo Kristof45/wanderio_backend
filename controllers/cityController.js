@@ -1,4 +1,4 @@
-const {getCities, createCity, updateCity, deleteCity} = require('../models/cityModel')
+const {getCities, createCity, updateCity, deleteCity, getCitiesById, } = require('../models/cityModel')
 
 async function getcities(req, res) {
     try {
@@ -42,4 +42,15 @@ async function deletecity(req, res) {
     }
 }
 
-module.exports = {getcities, createcity, updatecity, deletecity}
+async function getcitiesbyid(req, res){
+    try {
+        const cityID = req.params.cityID
+        const result = await getCitiesById(cityID)
+
+        return res.status(200).json(result)
+    } catch (err) {
+        return res.status(500).json({error: 'Hiba a varos keresesekor id alapjan'})
+    }
+}
+
+module.exports = {getcities, createcity, updatecity, deletecity, getcitiesbyid}
