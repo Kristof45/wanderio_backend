@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { config } = require('../config/dotenvConfig')
-const { getAllUser, findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail } = require('../models/userModel')
+const { getAllUser, findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail, modifyUser, deleteUser } = require('../models/userModel')
 
 
 const cookieOpts = {
@@ -163,4 +163,27 @@ async function emailChange(req, res) {
     }
 }
 
-module.exports = { alluser, register, login, whoAmI, logout, pswChange, nameChange, emailChange }
+//admin megvaltoztatja egy felhasznalo adatait
+async function modifyuser(req, res) {
+    try {
+        const userID = req.params.userID
+        const {username, email, role} = req.body
+
+        await modifyUser(userID, username, email, role)
+        return res.status(201).json({message: 'Sikeres valtoztatas'})
+    } catch (err) {
+        return res.status(500).json({ error: "Hiba amikor az admin probal adatot valtoztatni" })
+    }
+}
+
+//admin felhasznalot torol
+async function deleteuser(req, res) {
+    try {
+        const userID = req.params.userID
+        await deleteUser(userID)
+    } catch (err) {
+        return res.status(500).json({ error: "Hiba amikor az admin probal felhasznalot torolni" })
+    }
+}
+
+module.exports = { alluser, register, login, whoAmI, logout, pswChange, nameChange, emailChange, modifyuser, deleteuser }
