@@ -47,4 +47,18 @@ async function updateEmail(userID, email) {
     return result
 }
 
-module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail,getAllUser}
+async function modifyUser(userID, username, email, role) {
+    const sql = 'UPDATE `users` SET `username`= COALESCE(NULLIF(?, ""), `username`), `email`= COALESCE(NULLIF(?, ""), `email`), `role`= COALESCE(NULLIF(?, ""), `role`) WHERE `userID`= ?'
+    const [result] = await db.query(sql, [username, email, role, userID])
+
+    return result
+}
+
+async function deleteUser(userID) {
+    const sql = 'DELETE FROM `users` WHERE `userID`=?'
+    const [ result] = await db.query(sql, [userID])
+
+    return result
+}
+
+module.exports = {findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail,getAllUser, modifyUser, deleteUser }
