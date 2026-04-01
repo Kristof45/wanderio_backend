@@ -14,11 +14,22 @@ async function getHotels() {
     return result
 }
 
-async function createHotel(cityID, name, details, address) {
-    const sql = 'INSERT INTO `hotels`(cityID, `name`, `details`, `address`) VALUES (?, ?, ?, ?)'
-    const [result] = await db.query(sql, [cityID, name, details, address])
-    
-    return result
+async function createHotel(cityID, name, details, address, uploadedUrls) {
+    // Átalakítjuk a kép URL tömböt JSON sztringgé az adatbázis számára
+    const hotelImagesJSON = JSON.stringify(uploadedUrls || []);
+
+    const sql = 'INSERT INTO `hotels`(cityID, `name`, `details`, `address`, ) VALUES (?, ?, ?, ?)'
+    const [hotelResult] = await db.query(sql, [cityID, name, details, address])
+    const newHotelID = hotelResult.insertId;
+    // Ha vannak feltöltött képek, elmentjük őket a külön táblában
+    if (uploadedUrls && uploadedUrls.length > 0) {
+        // Batch insert: gyorsabb mint egyenkénti beszúrás minden képhez
+        const imageValues = uploadedUrls.map(url => [newHotelID, url]);
+        const imageSql = 'INSERT INTO `hotellmage`(hotelID, hotellmg) VALUES ?';
+        await db.query(imageSql, [imageValues]);
+    }
+
+    return hotelResult
 }
 
 async function updateHotel(cityID, hotelID, name, details, address) {
