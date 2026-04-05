@@ -1,4 +1,4 @@
-const {getCities, createCity, updateCity, deleteCity, getCitiesById,getCityDetails } = require('../models/cityModel')
+const {getCities, createCity, updateCity, deleteCity,getCityDetails } = require('../models/cityModel')
 
 async function getcities(req, res) {
     try {
@@ -64,4 +64,4 @@ async function getcitydetails(req, res) {
     }
 }
 
-module.exports = {getcities, createcity, updatecity, deletecity, getcitiesbyid, getcitydetails}
+module.exports = {getcities, createcity, updatecity, deletecity, getcitiesbyid, getcitydetails }
