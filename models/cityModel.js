@@ -28,8 +28,8 @@ async function deleteCity(cityID) {
     return result
 }
 
-async function getCitiesById(cityID){
-    const sql ='SELECT * FROM cities WHERE cityID=?'
+async function getCitiesById(cityID) {
+    const sql = 'SELECT * FROM cities WHERE cityID=?'
     const [result] = await db.query(sql, cityID)
 
     return result
@@ -45,7 +45,6 @@ async function getCityDetails(cityID) {
     }
     const city = cityResult[0];
 
-    // === VÁLTOZÁS ITT ===
     // Dinamikusan összerakjuk a szerver bázis URL-jét a .env fájl alapján.
     // Használunk alapértelmezett értékeket is, ha a .env-ben valami hiányozna.
     const host = process.env.HOST || '127.0.0.1';
@@ -77,25 +76,37 @@ async function getCityDetails(cityID) {
         })
     );
 
-    const hotelsWithImages = await Promise.all(
+    const hotelsWithDetails = await Promise.all(
         hotelsResult.map(async (hotel) => {
-            const hotelImagesSql = 'SELECT `hotelImg` as `imageUrl` FROM `hotelimage` WHERE `hotelID` = ?';
-            const [images] = await db.query(hotelImagesSql, [hotel.hotelID]);
+            const hotelImgSql = 'SELECT `hotelImg` as `imageUrl` FROM `hotelimage` WHERE `hotelID` = ?';
+
+            const [images] = await db.query(hotelImgSql, [hotel.hotelID])
+
+            const cheapestRoomSql = `
+                SELECT r.*, rt.type as typeName 
+                FROM rooms r
+                JOIN roomTypes rt ON r.typeId = rt.typeId
+                WHERE r.hotelID = ?
+                ORDER BY r.price ASC 
+                LIMIT 1`;
+            const [cheapestRoomResult] = await db.query(cheapestRoomSql, [hotel.hotelID]);
+
             return {
                 ...hotel,
-                images: images.map(img => `${serverBaseUrl}${img.imageUrl}`)
-            };
+                images: images.map(img => `${serverBaseUrl}${img.imageUrl}`),
+                cheapestRoom: cheapestRoomResult.length > 0 ? cheapestRoomResult[0] : null
+            }
         })
-    );
+    )
 
     // 5. Végső objektum összeállítása (Változatlan)
     return {
         ...city,
         images: cityImages,
         attractions: attractionsWithImages,
-        hotels: hotelsWithImages
+        hotels: hotelsWithDetails
     };
 }
 
 
-module.exports = {getCities, createCity, updateCity, deleteCity, getCitiesById, getCityDetails}
+module.exports = { getCities, createCity, updateCity, deleteCity, getCitiesById, getCityDetails }
