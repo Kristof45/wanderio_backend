@@ -1,4 +1,4 @@
-const { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel } = require('../models/hotelModel')
+const { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel, getHotelDetails } = require('../models/hotelModel')
 const cloudinary = require('cloudinary').v2
 
 //hotelek lekerese type es ar alapjan
@@ -92,4 +92,20 @@ async function deletehotel(req, res) {
     }
 }
 
-module.exports = { gethoteltypes, gethotels, createhotel, updatehotel, deletehotel }
+async function hoteldetails(req, res) {
+    try {
+        const hotelID = req.params.hotelID
+        const hotelData = await getHotelDetails(hotelID)
+
+        if(!hotelData){
+            return res.status(400).json({error:'Hotel is not found.'})
+        }
+
+        return res.status(200).json(hotelData)
+
+    } catch (err) {
+        return res.status(500).json({error:'Hiba a hoteldetails lekeresekor'})
+    }
+}
+
+module.exports = { gethoteltypes, gethotels, createhotel, updatehotel, deletehotel, hoteldetails }
