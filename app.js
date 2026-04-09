@@ -20,6 +20,7 @@ app.use(cors({
     origin: ['http://127.0.0.1:5173', 'http://localhost:5173' ],
     credentials: true
 }))
+app.use(express.static('public'));
 
 app.use('/api/users', userRoutes)
 app.use('/api/flights', flightRoutes)

@@ -114,7 +114,7 @@ async function hoteldetails(req, res) {
 async function uploadimage(req, res) {
     try {
         // 1. HIBAJAVÍTÁS: hotelID helyes kinyerése az URL paraméterből
-        const  hotelID  = req.params.hotelID;
+        const  {hotelID}  = req.params
 
         // Ellenőrizzük, hogy van-e hotelID és vannak-e feltöltött fájlok
         if (!hotelID) {
