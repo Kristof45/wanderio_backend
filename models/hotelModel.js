@@ -88,4 +88,18 @@ async function getHotelDetails(hotelID) {
     }
 }
 
-module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel ,getHotelDetails}
+async function uploadHotelImage(hotelID, imageUrl) {
+    const sql = 'INSERT INTO `hotelimage` (`hotelID`, `hotelImg`) VALUES (?, ?)';
+    const [result] = await db.query(sql, [hotelID, imageUrl]);
+    
+    return result;
+}
+
+async function getAdHotel() {
+    const sql = 'SELECT hotels.`hotelID`,cities.name AS `cityname`,hotels.`name`,hotels.`details`,hotels.`address`, hotelimage.hotelImg FROM `hotels` LEFT JOIN hotelimage ON hotels.hotelID = hotelimage.hotelID JOIN cities ON hotels.cityID = cities.cityID;'
+    const [result] = await db.query(sql)
+
+    return result
+}
+
+module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel ,getHotelDetails, uploadHotelImage, getAdHotel}
