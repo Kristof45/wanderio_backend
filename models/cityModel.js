@@ -36,77 +36,60 @@ async function getCitiesById(cityID) {
 }
 
 async function getCityDetails(cityID) {
-    // 1. Alap városi adatok lekérése (Változatlan)
-    const citySql = 'SELECT * FROM `cities` WHERE `cityID` = ?';
-    const [cityResult] = await db.query(citySql, [cityID]);
-
-    if (cityResult.length === 0) {
-        return null;
-    }
-    const city = cityResult[0];
-
-    // Dinamikusan összerakjuk a szerver bázis URL-jét a .env fájl alapján.
-    // Használunk alapértelmezett értékeket is, ha a .env-ben valami hiányozna.
     const host = process.env.HOST || '127.0.0.1';
     const port = process.env.PORT || 4000;
     const serverBaseUrl = `http://${host}:${port}`;
-    // Ez most ezt fogja eredményezni: 'http://127.0.0.1:4000'
+    const fixUrl = (url) => url && !url.startsWith('http') ? `${serverBaseUrl}/${url}` : url;
 
-    // 2. Város fő képeinek lekérése és URL összerakása
-    const cityImagesSql = 'SELECT `cityImg` FROM `cityimage` WHERE `cityID` = ?';
-    const [cityImagesResult] = await db.query(cityImagesSql, [cityID]);
-    const cityImages = cityImagesResult.map(row => `${serverBaseUrl}${row.cityImg}`);
+    // 1. Város adatai + Képei (külön lekérdezés, mert a galéria nem fér el egy JOIN-ban)
+    const [cities] = await db.query('SELECT * FROM cities WHERE cityID = ?', [cityID]);
+    if (!cities.length) return null;
+    const city = cities[0];
 
-    // 3. Látnivalók és hotelek alapadatainak lekérése (Változatlan)
-    const attractionsSql = 'SELECT `attractionID`, `name`, `description`, `address`, `price` FROM `attractions` WHERE `cityID` = ?';
-    const [attractionsResult] = await db.query(attractionsSql, [cityID]);
+    const [cityImgs] = await db.query('SELECT cityImg FROM cityimage WHERE cityID = ?', [cityID]);
+    city.images = cityImgs.map(i => fixUrl(i.cityImg));
 
-    const hotelsSql = 'SELECT `hotelID`, `name`, `details`, `address` FROM `hotels` WHERE `cityID` = ?';
-    const [hotelsResult] = await db.query(hotelsSql, [cityID]);
+    // 2. Látnivalók (JOIN-nal, mint az adminban)
+    const [attractions] = await db.query(`
+        SELECT a.*, ai.name as mainImg 
+        FROM attractions a 
+        LEFT JOIN attractionimage ai ON a.attractionID = ai.attractionID 
+        WHERE a.cityID = ? 
+        GROUP BY a.attractionID`, [cityID]);
+    city.attractions = attractions.map(a => ({ ...a, images: [fixUrl(a.mainImg)] }));
 
-    // 4. Képek hozzárendelése (Változatlan logika, de a serverBaseUrl-t használja)
-    const attractionsWithImages = await Promise.all(
-        attractionsResult.map(async (attraction) => {
-            const attractionImagesSql = 'SELECT `name` as `imageUrl` FROM `attractionimage` WHERE `attractionID` = ?';
-            const [images] = await db.query(attractionImagesSql, [attraction.attractionID]);
-            return {
-                ...attraction,
-                images: images.map(img => `${serverBaseUrl}${img.imageUrl}`)
-            };
-        })
-    );
+    // 3. HOTELEK + KÉP + LEGOLCSÓBB SZOBA (Egyetlen SQL kérésben!)
+    const [hotels] = await db.query(`
+        SELECT 
+            h.*, 
+            hi.hotelImg,
+            r.price as roomPrice, 
+            r.guests as roomGuests, 
+            rt.type as roomTypeName
+        FROM hotels h
+        LEFT JOIN hotelimage hi ON h.hotelID = hi.hotelID
+        LEFT JOIN (
+            SELECT hotelID, MIN(price) as minPrice 
+            FROM rooms GROUP BY hotelID
+        ) min_r ON h.hotelID = min_r.hotelID
+        LEFT JOIN rooms r ON h.hotelID = r.hotelID AND r.price = min_r.minPrice
+        LEFT JOIN roomTypes rt ON r.typeId = rt.typeId
+        WHERE h.cityID = ?
+        GROUP BY h.hotelID`, [cityID]);
 
-    const hotelsWithDetails = await Promise.all(
-        hotelsResult.map(async (hotel) => {
-            const hotelImgSql = 'SELECT `hotelImg` as `imageUrl` FROM `hotelimage` WHERE `hotelID` = ?';
+    // Itt csak formázzuk az eredményt, hogy a frontendnek ne kelljen változnia
+    city.hotels = hotels.map(h => ({
+        ...h,
+        hotelImg: fixUrl(h.hotelImg),
+        images: [fixUrl(h.hotelImg)],
+        cheapestRoom: h.roomPrice ? {
+            price: h.roomPrice,
+            guests: h.roomGuests,
+            typeName: h.roomTypeName
+        } : null
+    }));
 
-            const [images] = await db.query(hotelImgSql, [hotel.hotelID])
-
-            const cheapestRoomSql = `
-                SELECT r.*, rt.type as typeName 
-                FROM rooms r
-                JOIN roomTypes rt ON r.typeId = rt.typeId
-                WHERE r.hotelID = ?
-                ORDER BY r.price ASC 
-                LIMIT 1`;
-            const [cheapestRoomResult] = await db.query(cheapestRoomSql, [hotel.hotelID]);
-
-            return {
-                ...hotel,
-                images: images.map(img => `${serverBaseUrl}${img.imageUrl}`),
-                cheapestRoom: cheapestRoomResult.length > 0 ? cheapestRoomResult[0] : null
-            }
-        })
-    )
-
-    // 5. Végső objektum összeállítása (Változatlan)
-    return {
-        ...city,
-        images: cityImages,
-        attractions: attractionsWithImages,
-        hotels: hotelsWithDetails
-    };
+    return city;
 }
-
 
 module.exports = { getCities, createCity, updateCity, deleteCity, getCitiesById, getCityDetails }

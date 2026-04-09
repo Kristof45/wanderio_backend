@@ -61,7 +61,7 @@ async function getHotelDetails(hotelID) {
 
     const hotelImgSql = 'SELECT hotelImg as imgUrl FROM hotelimage WHERE hotelID=?'
     const [hotelImg] = await db.query(hotelImgSql, [hotelID])
-    const hotelImages = hotelImg.map(row => `${serverBaseUrl}${row.imgUrl}`)
+    const hotelImages = hotelImg.map(row => row.imgUrl)
 
     const roomsSql =
         `SELECT r.*, rt.type as typeName 
@@ -76,7 +76,7 @@ async function getHotelDetails(hotelID) {
             const [images] = await db.query(roomImagesSql, [room.roomID])
             return{
                 ...room,
-                images: images.map(img=> `${serverBaseUrl}${img.imgUrl}`)
+                images: images.map(img=> img.imgUrl)
             }
         })
     )
