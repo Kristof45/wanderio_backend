@@ -17,7 +17,7 @@ const fileFilter = (req, file, cb) => {
 const uploadMiddleware = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // Max 5 MB egy kép mérete
+    fileSize: 10 * 1024 * 1024, // Max 5 MB egy kép mérete
     files: 5 // Max 5 kép feltöltése egy hotelhez egyszerre
   },
   fileFilter: fileFilter
