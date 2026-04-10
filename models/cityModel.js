@@ -1,10 +1,19 @@
 const db = require('../db/db')
 
 async function getCities() {
-    const sql = 'SELECT * FROM `cities`'
-    const [result] = await db.query(sql)
+const sql = 'SELECT c.*, GROUP_CONCAT(ci.cityImg) AS cityImages FROM cities c LEFT JOIN cityimage ci ON c.cityID = ci.cityID GROUP BY c.cityID;';
+    
+    const [cities] = await db.query(sql);
 
-    return result
+    // FONTOS LÉPÉS: A stringből (pl. "url1,url2") tömböt ([ "url1", "url2" ]) csinálunk.
+    const citiesWithImageArray = cities.map(city => {
+        return {
+            ...city,
+            cityImages: city.cityImages ? city.cityImages.split(',') : []
+        };
+    });
+
+    return citiesWithImageArray;
 }
 
 async function createCity(name, country) {
@@ -14,9 +23,9 @@ async function createCity(name, country) {
     return result
 }
 
-async function updateCity(cityID, name, country) {
+async function updateCity(cityID, name, country, description) {
     const sql = 'UPDATE `cities` SET `name`= COALESCE(NULLIF(?, ""), `name`), `country`= COALESCE(NULLIF(?, ""), `country`) WHERE `cityID`=?'
-    const [result] = await db.query(sql, [name, country, cityID])
+    const [result] = await db.query(sql, [name, country, cityID, description])
 
     return result
 }
@@ -92,4 +101,11 @@ async function getCityDetails(cityID) {
     return city;
 }
 
-module.exports = { getCities, createCity, updateCity, deleteCity, getCitiesById, getCityDetails }
+async function uploadCityImage(cityID, imageUrl){
+    const sql = 'INSERT INTO `cityimage` (`cityID`, `cityImg`) VALUES (?, ?)';
+    const [result] = await db.query(sql, [cityID, imageUrl]);
+    
+    return result;
+}
+
+module.exports = { getCities, createCity, updateCity, deleteCity, getCitiesById, getCityDetails,uploadCityImage }

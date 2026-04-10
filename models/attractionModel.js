@@ -1,7 +1,7 @@
 const db = require('../db/db')
 
 async function getAttractions() {
-    const sql = 'SELECT * FROM `attractions`'
+    const sql = 'jSELECT a.*, GROUP_CONCAT(ai.name) AS attractionImages FROM attractions a LEFT JOIN attractionImage ai ON a.attractionID = ai.attractionID GROUP BY a.attractionID;'
     const [ result] = await db.query(sql)
 
     return result
@@ -23,9 +23,9 @@ async function createAtt(cityID, name, description, address, price, image) {
     return result
 }
 
-async function updateAtt(attractionID, cityID, name, description, address, price, image) {
+async function updateAtt(attractionID, cityID, name, description, address, price) {
     const sql = 'UPDATE `attractions` SET `cityID` = COALESCE(NULLIF(?, ""), `cityID`), `name` = COALESCE(NULLIF(?, ""), `name`), `description` = COALESCE(NULLIF(?, ""), `description`), `address` = COALESCE(NULLIF(?, ""), `address`), `price` = COALESCE(NULLIF(?, ""), `price`), `image` = COALESCE(NULLIF(?, ""), `image`) WHERE `attractionID`=?'
-    const [result] = await db.query(sql, [cityID, name, description, address, price, image, attractionID])
+    const [result] = await db.query(sql, [cityID, name, description, address, price, attractionID])
 
     return result
 }
@@ -37,4 +37,11 @@ async function deleteAtt(attractionID) {
     return result 
 }
 
-module.exports = {getAttractions, getAttractionsImg, createAtt, updateAtt, deleteAtt}
+async function uploadAttractionImage(attractionID, imageUrl) {
+    const sql = 'INSERT INTO `attractionimage` (`attractionID`, `name`) VALUES (?, ?)';
+    const [result] = await db.query(sql, [attractionID, imageUrl]);
+    
+    return result;
+}
+
+module.exports = {getAttractions, getAttractionsImg, createAtt, updateAtt, deleteAtt, uploadAttractionImage}
