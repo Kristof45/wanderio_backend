@@ -36,4 +36,11 @@ async function deleteFlight(flightsId) {
     return result
 }
 
-module.exports = {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight}
+async function adGetFlights() {
+    const sql = 'SELECT f.flightsId, a.airline, f.starting, f.arivval, f.price, c1.name AS depCity, c2.name AS destCity FROM `flights` AS f JOIN cities AS c1 ON f.departureCityID = c1.cityID JOIN cities AS c2 ON f.destinationCityID = c2.cityID JOIN airlines AS a ON f.airlineId = a.airlineID ;'
+    const [result] = await db.query(sql)
+    
+    return result
+}
+
+module.exports = {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight, adGetFlights}
