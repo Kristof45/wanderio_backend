@@ -1,4 +1,4 @@
-const {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight} = require('../models/flightModel')
+const {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight, adGetFlights} = require('../models/flightModel')
 
 //az osszes flight lekérése
 async function getallflights(req, res) {
@@ -56,6 +56,8 @@ async function updateflight(req, res) {
         await updateFlight(flightsId, airlineId, starting, arivval, price, departureCityID, destinationCityID)
         return res.status(201).json({message: 'Sikeres repjegy modositas'})
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({error: 'Hiba a repülőjegy módosításakor', err})
     }
 }
@@ -73,4 +75,13 @@ async function deleteflight(req, res) {
     }
 }
 
-module.exports = {getallflights, searchflight, createflight, updateflight, deleteflight}
+async function adgetflights(req, res) {
+    try {
+        const result = await adGetFlights()
+        return res.status(200).json(result)
+    } catch (err) {
+        return res.status(500).json({error: 'Hiba az admin repülőjegy lekerese során'})
+    }
+}
+
+module.exports = {getallflights, searchflight, createflight, updateflight, deleteflight, adgetflights}

@@ -6,6 +6,8 @@ async function getattractions(req, res) {
         const result = await getAttractions()
         return res.status(200).json(result)
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({error: 'Hiba az atrakciok lekeresekor'})
     }
 }
@@ -46,7 +48,7 @@ async function deleteatt(req, res) {
     try {
         const attractionID = req.params.attractionID
         await deleteAtt(attractionID)
-        return res.status(204).send()
+        return res.status(200).json({message: 'Sikeres atrakcio törles'})
     } catch (err) {
         return res.status(500).json({error: 'Hiba az atrakciok torlesekor'})
     }

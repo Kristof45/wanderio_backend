@@ -1,10 +1,15 @@
 const db = require('../db/db')
 
 async function getAttractions() {
-    const sql = 'jSELECT a.*, GROUP_CONCAT(ai.name) AS attractionImages FROM attractions a LEFT JOIN attractionImage ai ON a.attractionID = ai.attractionID GROUP BY a.attractionID;'
+    const sql = 'SELECT a.`attractionID`,c.name AS cName, a.name, a.description, a.address, a.price, GROUP_CONCAT(ai.name) AS attractionImages FROM attractions AS a LEFT JOIN attractionImage AS ai ON a.attractionID = ai.attractionID JOIN cities AS c ON a.cityID = c.cityID GROUP BY a.attractionID;'
     const [ result] = await db.query(sql)
+    const attractions = result.map(attraction => {
+        return {
+            ...attraction, attractionImages: attraction.attractionImages ? attraction.attractionImages.split(',') : []
+        }
+    })
 
-    return result
+    return attractions
 }
 
 //attractions osszekotve a attractionImg vel
@@ -24,7 +29,7 @@ async function createAtt(cityID, name, description, address, price, image) {
 }
 
 async function updateAtt(attractionID, cityID, name, description, address, price) {
-    const sql = 'UPDATE `attractions` SET `cityID` = COALESCE(NULLIF(?, ""), `cityID`), `name` = COALESCE(NULLIF(?, ""), `name`), `description` = COALESCE(NULLIF(?, ""), `description`), `address` = COALESCE(NULLIF(?, ""), `address`), `price` = COALESCE(NULLIF(?, ""), `price`), `image` = COALESCE(NULLIF(?, ""), `image`) WHERE `attractionID`=?'
+    const sql = 'UPDATE `attractions` SET `cityID` = COALESCE(NULLIF(?, ""), `cityID`), `name` = COALESCE(NULLIF(?, ""), `name`), `description` = COALESCE(NULLIF(?, ""), `description`), `address` = COALESCE(NULLIF(?, ""), `address`), `price` = COALESCE(NULLIF(?, ""), `price`) WHERE `attractionID`=?'
     const [result] = await db.query(sql, [cityID, name, description, address, price, attractionID])
 
     return result
