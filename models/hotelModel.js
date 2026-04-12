@@ -47,45 +47,58 @@ async function deleteHotel(hotelID) {
 }
 
 async function getHotelDetails(hotelID) {
-    const sql =  'SELECT * FROM hotels WHERE hotelID = ?'
-    const [hotelResult] = await db.query(sql, [hotelID])
-
-    if (hotelResult.length === 0) {
-        return null
-    }
-    const hotel = hotelResult[0]
-
+    // 1. Segédfüggvény a relatív URL-ek javításához
     const host = process.env.HOST || '127.0.0.1';
     const port = process.env.PORT || 4000;
     const serverBaseUrl = `http://${host}:${port}`;
+    const fixUrl = (url) => url && !url.startsWith('http') ? `${serverBaseUrl}/${url}` : url;
 
-    const hotelImgSql = 'SELECT hotelImg as imgUrl FROM hotelimage WHERE hotelID=?'
-    const [hotelImg] = await db.query(hotelImgSql, [hotelID])
-    const hotelImages = hotelImg.map(row => row.imgUrl)
+    // 2. A hotel alap adatainak lekérdezése
+    const [hotelResult] = await db.query('SELECT * FROM hotels WHERE hotelID = ?', [hotelID]);
 
-    const roomsSql =
-        `SELECT r.*, rt.type as typeName 
-        FROM rooms r
-        JOIN roomTypes rt ON r.typeId = rt.typeId
-        WHERE r.hotelID = ?`;
+    if (hotelResult.length === 0) {
+        return null; // Ha nincs ilyen hotel, térjünk vissza null-lal
+    }
+    const hotel = hotelResult[0];
+
+    // 3. A hotel összes képének lekérdezése (egyetlen hívás)
+    const [hotelImgResult] = await db.query('SELECT hotelImg FROM hotelimage WHERE hotelID = ?', [hotelID]);
+    hotel.images = hotelImgResult.map(row => fixUrl(row.hotelImg));
+
+    // 4. A hotel összes szobájának ÉS a szobák képeinek lekérdezése EGYETLEN, HATÉKONY lekérdezéssel
+    const roomsSql = `
+        SELECT 
+            r.*, 
+            rt.type AS typeName,
+            -- Összegyűjtjük az összes kép URL-t egy vesszővel elválasztott stringbe
+            GROUP_CONCAT(ri.roomImg) AS roomImages 
+        FROM 
+            rooms r
+        LEFT JOIN 
+            roomtypes rt ON r.typeId = rt.typeId
+        LEFT JOIN 
+            -- A LEFT JOIN itt azért fontos, hogy a kép nélküli szobák is visszajöjjenek
+            roomimage ri ON r.roomId = ri.roomId
+        WHERE 
+            r.hotelID = ?
+        GROUP BY 
+            r.roomId; -- Csoportosítunk szoba alapján, hogy minden szoba csak egyszer szerepeljen
+    `;
     const [roomsResult] = await db.query(roomsSql, [hotelID]);
 
-    const roomWithImages = await Promise.all(
-        roomsResult.map(async (room) =>{
-            const roomImagesSql = 'SELECT roomImg as imgUrl FROM roomimage WHERE roomID = ? '
-            const [images] = await db.query(roomImagesSql, [room.roomID])
-            return{
-                ...room,
-                images: images.map(img=> img.imgUrl)
-            }
-        })
-    )
+    // 5. A kapott eredmény feldolgozása a kliens számára
+    // A 'GROUP_CONCAT' stringet itt alakítjuk át valódi képtömbbé.
+    hotel.rooms = roomsResult.map(room => {
+        return {
+            ...room,
+            images: (room.roomImages || '').split(',') // Ha roomImages null, üres stringből csinálunk tömböt
+                    .filter(url => url) // Kiszűrjük az üres stringeket, ha a split eredménye az lenne
+                    .map(fixUrl) // Minden URL-t "megjavítunk"
+        };
+    });
 
-    return {
-        ...hotel,
-        images: hotelImages,
-        rooms: roomWithImages
-    }
+    // 6. Visszaadjuk a teljes, gazdagított hotel objektumot
+    return hotel;
 }
 
 async function uploadHotelImage(hotelID, imageUrl) {
