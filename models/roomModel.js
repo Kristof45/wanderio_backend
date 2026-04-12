@@ -14,7 +14,7 @@ async function createRoom(hotelID, typeId, available, price, guests, climate, ar
     return result
 }
 
-async function updateRoom(roomId, hotelID, typeId, available, price, guests, climate, arrival, starting, services, sizeparams) {
+async function updateRoom(roomId, hotelID, typeId, available, price, guests, climate, arrival, starting, services, size) {
     const sql = 'UPDATE `rooms` SET `hotelID`=?,`typeId`=?,`available`=?,`price`=?,`guests`=?,`climate`=?,`arrival`=?,`starting`=?,`services`=?,`size`=? WHERE `roomId`= ?'
     const [result] = await db.query(sql, [ hotelID, typeId, available, price, guests, climate, arrival, starting, services, size, roomId])
 
@@ -29,10 +29,37 @@ async function deleteRoom(roomId) {
 }
 
 async function adGetRoom() {
-    const sql = 'SELECT r.roomId, h.name as hotelName, rt.type, r.available, r.price, r.guests, r.climate, r.arrival, r.starting, r.services, r.size FROM `rooms` AS r JOIN hotels AS h ON r.hotelID = h.hotelID JOIN roomtypes AS rt ON r.typeId = rt.typeId  '
-    const [result] = await db.query(sql)
+    const sql = `
+        SELECT 
+            r.*, 
+            h.name as hotelName,
+            rt.type as type,
+            GROUP_CONCAT(ri.roomImg) AS roomImages 
+        FROM 
+            rooms r
+        LEFT JOIN 
+            roomimage ri ON r.roomId = ri.roomId
+        LEFT JOIN 
+            hotels h ON r.hotelID = h.hotelID
+        LEFT JOIN
+            roomtypes rt on r.typeId = rt.typeId
+        GROUP BY 
+            r.roomId
+    `;
+    const [rooms] = await db.query(sql);
+
+    // FONTOS: A stringből tömböt csinálunk!
+    const result = rooms.map(room => ({
+        ...room, roomImages: room.roomImages ? room.roomImages.split(',') : []
+    }));
+    return result;
+}
+
+async function uploadRoomImage(roomId, imageUrl) {
+    const sql = 'INSERT INTO `roomimage` (`roomId`, `roomImg`) VALUES (?, ?)'
+    const result = await db.query(sql, [roomId, imageUrl])
 
     return result
 }
 
-module.exports = {getRooms, createRoom, updateRoom, deleteRoom, adGetRoom }
+module.exports = {getRooms, createRoom, updateRoom, deleteRoom, adGetRoom ,uploadRoomImage}
