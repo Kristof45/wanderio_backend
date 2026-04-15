@@ -14,11 +14,20 @@ async function searchFlight(starting, departure, destination) {
     return result
 }
 
-async function createFlight(airlineId, starting, arivval, price, departureCityID, destinationCityID) {
-    const sql = 'INSERT INTO `flights`(`airlineId`, `starting`, `arivval`, `price`, departureCityID, destinationCityID) VALUES (?,?,?,?,?,?)'
-    const [result] = await db.query(sql, [airlineId, starting, arivval, price, departureCityID, destinationCityID])
+async function createFlight(flightData) {
 
-    return result
+    const {airlineId,departureTime, arivvalTime,price,  departureCity, destinationCity } = flightData
+
+    const sql = 'INSERT INTO `flights`(`airlineId`, `starting`, `arivval`, `price`, departureCityID, destinationCityID) VALUES (?,?,?,?,?,?)'
+    const [result] = await db.query(sql, [airlineId, departureTime, arivvalTime, price, departureCity, destinationCity])
+
+    return result.insertId
+}
+
+async function createTicketOrder(userId, flightId, airlineId){
+    const sql = `INSERT INTO ticketOrders (userID, airlineID, status) VALUES (?, ?, ?)`
+    const [result] = await db.query(sql, [userId,airlineId, 'pending'])
+    return result.insertId
 }
 
 async function updateFlight(flightsId, airlineId, starting, arivval, price, departureCityID, destinationCityID) {
@@ -43,4 +52,4 @@ async function adGetFlights() {
     return result
 }
 
-module.exports = {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight, adGetFlights}
+module.exports = {getAllFlights, searchFlight, createFlight, createTicketOrder, updateFlight, deleteFlight, adGetFlights}

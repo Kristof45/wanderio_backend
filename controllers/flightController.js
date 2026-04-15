@@ -1,4 +1,4 @@
-const {getAllFlights, searchFlight, createFlight, updateFlight, deleteFlight, adGetFlights} = require('../models/flightModel')
+const {getAllFlights, searchFlight, createFlight,createTicketOrder, updateFlight, deleteFlight, adGetFlights} = require('../models/flightModel')
 
 //az osszes flight lekérése
 async function getallflights(req, res) {
@@ -29,20 +29,23 @@ async function searchflight(req, res) {
 }
 
 //uj flight letrehozasa
-async function createflight(req, res) {
+async function createBooking(req, res) {
     try {
-        const {airlineId, starting, arivval, price, departureCityID, destinationCityID} = req.body
+        const userId = req.user.userID
+        const flightData = req.body
+        const airlineId = flightData.airlineId
         
-        if (!airlineId || !starting || !arivval|| !price || !departureCityID || !destinationCityID) {
-            return res.status(400).json({error: 'Minden mezot tolts ki a uj repulojegy letrehozasahoz', err})
+        if (!userId || !airlineId) {
+            return res.status(401).json({ error: "Felhasználói azonosítás sikertelen." });
         }
 
-        const {insertId} = await createFlight(airlineId, starting, arivval, price, departureCityID, destinationCityID)
+        const newFlight = await createFlight(flightData)
+        await createTicketOrder(userId, newFlight, airlineId)
 
-        res.status(201).json({message: 'Sikeres repjegy letrehozas', insertId})
+        return res.status(201).json({message: 'Flight successfully booked:'})
     } catch (err) {
         console.log(err);
-        return res.status(500).json({error: 'Hiba a repülőjegy létrehozásakor', err})
+        return res.status(500).json({error: 'Sever error during booking', err})
     }
 }
 
@@ -84,4 +87,59 @@ async function adgetflights(req, res) {
     }
 }
 
-module.exports = {getallflights, searchflight, createflight, updateflight, deleteflight, adgetflights}
+async function searchFlights(req, res) {
+    try {
+        const { departure, destination, date } = req.query;
+
+        if (!departure || !destination || !date) {
+            return res.status(400).json({ error: "Indulási hely, célállomás és dátum megadása kötelező." });
+        }
+
+        const airlines = [
+            { id: 1, name: "Lufthansa" },
+            { id: 3, name: "Wizz Air" },
+            { id: 4, name: "Ryanair" }
+        ];
+
+        const generatedFlights = [
+            {
+                id: `gen-1-${Date.now()}`,
+                airlineId: 3,
+                airlineName: "Wizz Air",
+                departureCity: departure,
+                destinationCity: destination,
+                departureTime: `${date}T08:30:00`,
+                arrivalTime: `${date}T10:30:00`,
+                price: Math.floor(Math.random() * 50) + 80
+            },
+            {
+                id: `gen-2-${Date.now()}`,
+                airlineId: 1,
+                airlineName: "Lufthansa",
+                departureCity: departure,
+                destinationCity: destination,
+                departureTime: `${date}T14:00:00`,
+                arrivalTime: `${date}T16:00:00`,
+                price: Math.floor(Math.random() * 60) + 120
+            },
+            {
+                id: `gen-3-${Date.now()}`,
+                airlineId: 4,
+                airlineName: "Ryanair",
+                departureCity: departure,
+                destinationCity: destination,
+                departureTime: `${date}T20:15:00`,
+                arrivalTime: `${date}T22:15:00`,
+                price: Math.floor(Math.random() * 70) + 150
+            }
+        ];
+
+        return res.status(200).json(generatedFlights);
+
+    } catch (err) {
+        return res.status(500).json({ error: "Hiba a járatok keresése közben." });
+    }
+}
+
+
+module.exports = {getallflights, searchflight, createBooking, updateflight, deleteflight, adgetflights,searchFlights}
