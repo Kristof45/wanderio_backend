@@ -115,4 +115,16 @@ async function getAdHotel() {
     return result
 }
 
-module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel ,getHotelDetails, uploadHotelImage, getAdHotel}
+async function saveHotelBooking(userID, hotelID, roomID, days){
+    const sql = ` INSERT INTO hotelorders (userID, hotelID, roomId, date, day, status) VALUES (?, ?, ?, NOW(), ?, 'pending')`
+
+    try {
+        const [result] = await db.query(sql,[userID, hotelID, roomID, days])
+        return result
+    } catch (error) {
+        console.error("Adatbázis hiba a hotel foglalás mentésekor:", error);
+        throw new Error("Adatbázis hiba a foglalás rögzítése során.");
+    }
+}
+
+module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel ,getHotelDetails, uploadHotelImage, getAdHotel, saveHotelBooking}

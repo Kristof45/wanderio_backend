@@ -1,4 +1,4 @@
-const { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel, uploadHotelImage, getAdHotel, getHotelDetails }= require('../models/hotelModel.js');
+const { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel, uploadHotelImage, getAdHotel, getHotelDetails, saveHotelBooking }= require('../models/hotelModel.js');
 const cloudinary = require('../config/cloudinary.js')
 
 //hotelek lekerese type es ar alapjan
@@ -176,4 +176,31 @@ async function getadhotel(req, res) {
     }
 }
 
-module.exports = { gethoteltypes, gethotels, createhotel, updatehotel, deletehotel, hoteldetails, uploadimage, getadhotel }
+//hotelorder letrehozasa
+
+async function createhotelbook(req,res){
+    console.log('a rep.user erteke a hotel foglalasanal', req.user);
+    try {
+        const userID = req.user.userID
+
+        if(!userID || !req.user.userID){
+            return res.status(401).json({error:"Felhasználói azonosítás sikertelen. A token hiányzik vagy érvénytelen."})
+        }
+
+
+        const {hotelID, roomId, days} = req.body
+
+        if(!hotelID || !roomId || !days){
+            return res.status(400).json({error:"Hianyzo adatok a foglalashoz"})
+        }
+        await saveHotelBooking(userID,hotelID,roomId,days)
+
+        return res.status(201).json({message:"Szobafoglalas sikeresen rogzitve!"})
+        
+    } catch (err) {
+        console.error("Hiba a hotel foglalás feldolgozása közben:", err);
+        return res.status(500).json({error: 'Hiba amikor uj hotelt akar letrehozni.'})
+    }
+}
+
+module.exports = { gethoteltypes, gethotels, createhotel, updatehotel, deletehotel, hoteldetails, uploadimage, getadhotel ,createhotelbook}
