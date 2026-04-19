@@ -54,11 +54,12 @@ async function updateticketstatus(req, res) {
 async function deleteticketorder(req, res) {
     try {
         const orderID = req.params.orderID
-        const { userID } = req.body
-        //console.log(orderID, userID);
-        await deleteTicketOrder(orderID, userID)
+        //console.log(orderID);
+        await deleteTicketOrder(orderID)
         return res.status(200).json({message: 'Sikeres jegy rendeles torles'})
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({ error: 'Hiba a jegy rendeles torlesekor' })
     }
 }
