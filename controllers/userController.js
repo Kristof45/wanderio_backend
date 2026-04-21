@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { config } = require('../config/dotenvConfig')
 const { getAllUser, findByEmail, createUser, updatePsw, getUserById, updateName, updateEmail, modifyUser, deleteUser } = require('../models/userModel')
@@ -6,8 +6,8 @@ const { getAllUser, findByEmail, createUser, updatePsw, getUserById, updateName,
 
 const cookieOpts = {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
     path: '/',
     maxAge: 1000 * 60 * 60 * 24 * 7
 }
@@ -102,7 +102,12 @@ async function whoAmI(req, res) {
 //logout
 async function logout(req, res) {
     try {
-        return res.clearCookie(config.COOKIE_NAME, { path: '/' }).status(200).json({ message: 'Sikeres kijelentkezés' })
+        return res.clearCookie(config.COOKIE_NAME, 
+            {   httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                path: '/' 
+            }).status(200).json({ message: 'Sikeres kijelentkezés' })
     } catch (err) {
         return res.status(500).json({ error: 'Hiba a kijelentkezés során' })
     }
