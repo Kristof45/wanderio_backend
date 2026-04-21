@@ -47,12 +47,6 @@ async function deleteHotel(hotelID) {
 }
 
 async function getHotelDetails(hotelID) {
-    // 1. Segédfüggvény a relatív URL-ek javításához
-    const host = process.env.HOST || '127.0.0.1';
-    const port = process.env.PORT || 4000;
-    const serverBaseUrl = `http://${host}:${port}`;
-    const fixUrl = (url) => url && !url.startsWith('http') ? `${serverBaseUrl}/${url}` : url;
-
     // 2. A hotel alap adatainak lekérdezése
     const [hotelResult] = await db.query('SELECT * FROM hotels WHERE hotelID = ?', [hotelID]);
 
@@ -63,7 +57,7 @@ async function getHotelDetails(hotelID) {
 
     // 3. A hotel összes képének lekérdezése (egyetlen hívás)
     const [hotelImgResult] = await db.query('SELECT hotelImg FROM hotelimage WHERE hotelID = ?', [hotelID]);
-    hotel.images = hotelImgResult.map(row => fixUrl(row.hotelImg));
+    hotel.images = hotelImgResult.map(row => row.hotelImg);
 
     // 4. A hotel összes szobájának ÉS a szobák képeinek lekérdezése EGYETLEN, HATÉKONY lekérdezéssel
     const roomsSql = `
@@ -92,8 +86,7 @@ async function getHotelDetails(hotelID) {
         return {
             ...room,
             images: (room.roomImages || '').split(',') // Ha roomImages null, üres stringből csinálunk tömböt
-                    .filter(url => url) // Kiszűrjük az üres stringeket, ha a split eredménye az lenne
-                    .map(fixUrl) // Minden URL-t "megjavítunk"
+                .filter(url => url) // Kiszűrjük az üres stringeket, ha a split eredménye az lenne// Minden URL-t "megjavítunk"
         };
     });
 
@@ -104,7 +97,7 @@ async function getHotelDetails(hotelID) {
 async function uploadHotelImage(hotelID, imageUrl) {
     const sql = 'INSERT INTO `hotelimage` (`hotelID`, `hotelImg`) VALUES (?, ?)';
     const [result] = await db.query(sql, [hotelID, imageUrl]);
-    
+
     return result;
 }
 
@@ -115,11 +108,11 @@ async function getAdHotel() {
     return result
 }
 
-async function saveHotelBooking(userID, hotelID, roomID, days){
+async function saveHotelBooking(userID, hotelID, roomID, days) {
     const sql = ` INSERT INTO hotelorders (userID, hotelID, roomId, date, day, status) VALUES (?, ?, ?, NOW(), ?, 'pending')`
 
     try {
-        const [result] = await db.query(sql,[userID, hotelID, roomID, days])
+        const [result] = await db.query(sql, [userID, hotelID, roomID, days])
         return result
     } catch (error) {
         console.error("Adatbázis hiba a hotel foglalás mentésekor:", error);
@@ -127,4 +120,4 @@ async function saveHotelBooking(userID, hotelID, roomID, days){
     }
 }
 
-module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel ,getHotelDetails, uploadHotelImage, getAdHotel, saveHotelBooking}
+module.exports = { getHotelTypes, getHotels, createHotel, updateHotel, deleteHotel, getHotelDetails, uploadHotelImage, getAdHotel, saveHotelBooking }
