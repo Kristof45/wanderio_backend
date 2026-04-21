@@ -45,10 +45,6 @@ async function getCitiesById(cityID) {
 }
 
 async function getCityDetails(cityID) {
-    const host = process.env.HOST || '127.0.0.1';
-    const port = process.env.PORT || 4000;
-    const serverBaseUrl = `http://${host}:${port}`;
-    const fixUrl = (url) => url && !url.startsWith('http') ? `${serverBaseUrl}/${url}` : url;
 
     // 1. Város adatai + Képei (külön lekérdezés, mert a galéria nem fér el egy JOIN-ban)
     const [cities] = await db.query('SELECT * FROM cities WHERE cityID = ?', [cityID]);
@@ -56,7 +52,7 @@ async function getCityDetails(cityID) {
     const city = cities[0];
 
     const [cityImgs] = await db.query('SELECT cityImg FROM cityimage WHERE cityID = ?', [cityID]);
-    city.images = cityImgs.map(i => fixUrl(i.cityImg));
+    city.images = cityImgs.map(i => i.cityImg);
 
     // 2. Látnivalók (JOIN-nal, mint az adminban)
     const [attractions] = await db.query(`
@@ -65,7 +61,7 @@ async function getCityDetails(cityID) {
         LEFT JOIN attractionimage ai ON a.attractionID = ai.attractionID 
         WHERE a.cityID = ? 
         GROUP BY a.attractionID`, [cityID]);
-    city.attractions = attractions.map(a => ({ ...a, images: [fixUrl(a.mainImg)] }));
+    city.attractions = attractions.map(a => ({ ...a, images: a.mainImg?  [a.mainImg] : [] }));
 
     // 3. HOTELEK + KÉP + LEGOLCSÓBB SZOBA (Egyetlen SQL kérésben!)
     const [hotels] = await db.query(`
@@ -89,8 +85,7 @@ async function getCityDetails(cityID) {
     // Itt csak formázzuk az eredményt, hogy a frontendnek ne kelljen változnia
     city.hotels = hotels.map(h => ({
         ...h,
-        hotelImg: fixUrl(h.hotelImg),
-        images: [fixUrl(h.hotelImg)],
+        images:  h.hotelImg ? [h.hotelImg] : [],
         cheapestRoom: h.roomPrice ? {
             price: h.roomPrice,
             guests: h.roomGuests,
