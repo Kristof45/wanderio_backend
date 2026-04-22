@@ -1,7 +1,7 @@
 const db = require('../db/db')
 
 async function getAttractions() {
-    const sql = 'SELECT a.`attractionID`,c.name AS cName, a.name, a.description, a.address, a.price, GROUP_CONCAT(ai.name) AS attractionImages FROM attractions AS a LEFT JOIN attractionImage AS ai ON a.attractionID = ai.attractionID JOIN cities AS c ON a.cityID = c.cityID GROUP BY a.attractionID;'
+    const sql = 'SELECT a.`attractionID`,c.name AS cName, a.name, a.description, a.address, a.price, GROUP_CONCAT(ai.name) AS attractionImages FROM attractions AS a LEFT JOIN attractionimage AS ai ON a.attractionID = ai.attractionID JOIN cities AS c ON a.cityID = c.cityID GROUP BY a.attractionID;'
     const [ result] = await db.query(sql)
     const attractions = result.map(attraction => {
         return {
