@@ -78,7 +78,7 @@ async function getCityDetails(cityID) {
             FROM rooms GROUP BY hotelID
         ) min_r ON h.hotelID = min_r.hotelID
         LEFT JOIN rooms r ON h.hotelID = r.hotelID AND r.price = min_r.minPrice
-        LEFT JOIN roomTypes rt ON r.typeId = rt.typeId
+        LEFT JOIN roomtypes rt ON r.typeId = rt.typeId
         WHERE h.cityID = ?
         GROUP BY h.hotelID`, [cityID]);
 
