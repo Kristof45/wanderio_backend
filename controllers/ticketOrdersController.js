@@ -6,6 +6,8 @@ async function getticketorders(req, res) {
         const result = await getTicketOrders()
         return res.status(200).json(result)
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({ error: 'Hiba a jegy rendelesek lekerdezesekor' })
     }
 }
@@ -63,5 +65,16 @@ async function deleteticketorder(req, res) {
         return res.status(500).json({ error: 'Hiba a jegy rendeles torlesekor' })
     }
 }
+
+// async function getCart(req, res) {
+//     try {
+//         const userID = req.user.userID;
+//         const cartData = await getCartForUser(userID); // Itt a modellből jövő függvény neve legyen konzisztens!
+//         res.status(200).json(cartData);
+//     } catch (err) {
+//         console.error("Hiba a kosár lekérésekor:", err);
+//         res.status(500).json({ error: 'Szerverhiba' });
+//     }
+// }
 
 module.exports = { getticketorders, getticketorder, createticketorder, updateticketstatus, deleteticketorder }
