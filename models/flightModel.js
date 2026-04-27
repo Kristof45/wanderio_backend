@@ -25,7 +25,7 @@ async function createFlight(flightData) {
 }
 
 async function createTicketOrder(userId, flightsId, airlineId){
-    const sql = `INSERT INTO ticketOrders (userID, flightsId, airlineID, status) VALUES (?, ?, ?, ?)`
+    const sql = `INSERT INTO ticketorders (userID, flightsId, airlineId, status) VALUES (?, ?, ?, ?)`
     const [result] = await db.query(sql, [userId, flightsId, airlineId, 'pending'])
     return result.insertId
 }
