@@ -35,4 +35,50 @@ async function deleteTicketOrder(orderID) {
     return result
 }
 
+// async function getCartForUser(userID) {
+//     // 1. HOTEL FOGLALÁSOK LEKÉRÉSE A KOSÁRBÓL
+//     const hotelSql = `
+//         SELECT 
+//             ho.orderID,
+//             h.name,
+//             c.name as city,
+//             r.price,
+//             hi.hotelImg as imageUrl
+//         FROM hotelorders ho
+//         JOIN hotels h ON ho.hotelID = h.hotelID
+//         JOIN cities c ON h.cityID = c.cityID
+//         JOIN rooms r ON ho.roomID = r.roomID
+//         LEFT JOIN hotelimage hi ON h.hotelID = hi.hotelID
+//         WHERE ho.userID = ? AND ho.status = 'in_cart'
+//         GROUP BY ho.orderID
+//     `;
+//     const [hotels] = await db.query(hotelSql, [userID]);
+
+//     // 2. REPJÁRAT FOGLALÁSOK LEKÉRÉSE A KOSÁRBÓL
+//     const flightSql = `
+//         SELECT 
+//             tord.orderID,
+//             a.airline as name,
+//             dep_city.name as 'from',
+//             dest_city.name as 'to',
+//             f.price,
+//             ai.airlineImg as imageUrl
+//         FROM ticketorders tord
+//         JOIN flights f ON tord.airlineId = f.flightsId
+//         JOIN airlines a ON f.airlineId = a.airlineID
+//         JOIN cities dep_city ON f.departureCityID = dep_city.cityID
+//         JOIN cities dest_city ON f.destinationCityID = dest_city.cityID
+//         LEFT JOIN airlineimage ai ON a.airlineID = ai.airlineID
+//         WHERE tord.userID = ? AND tord.status = 'in_cart'
+//         GROUP BY tord.orderID
+//     `;
+//     const [flights] = await db.query(flightSql, [userID]);
+
+//     // 3. EREDMÉNY VISSZAADÁSA (Formázás nélkül, mert az URL-ek már jók)
+//     return {
+//         hotels: hotels,
+//         flights: flights
+//     };
+// }
+
 module.exports = {getTicketOrders, getTicketOrder, createTicketOrder, updateTicketStatus, deleteTicketOrder}
