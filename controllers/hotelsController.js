@@ -86,7 +86,7 @@ async function deletehotel(req, res) {
     try {
         const hotelID = req.params.hotelID
         await deleteHotel(hotelID)
-        return res.status(204).send()
+        return res.status(200).json({message:'Sikeres hotel torles.'})
     } catch (err) {
         return res.status(500).json({ error: 'Hiba a hotel torlesekor' })
     }

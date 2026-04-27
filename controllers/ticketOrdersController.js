@@ -1,4 +1,4 @@
-const { getTicketOrders, getTicketOrder, createTicketOrder, updateTicketStatus, deleteTicketOrder } = require('../models/ticketOrderModel')
+const { getTicketOrders, getTicketOrder, createTicketOrder, updateTicketStatus, deleteTicketOrder, getCartForUser } = require('../models/ticketOrderModel')
 
 //osszes jegy rendeles lekerese
 async function getticketorders(req, res) {
@@ -66,15 +66,15 @@ async function deleteticketorder(req, res) {
     }
 }
 
-// async function getCart(req, res) {
-//     try {
-//         const userID = req.user.userID;
-//         const cartData = await getCartForUser(userID); // Itt a modellből jövő függvény neve legyen konzisztens!
-//         res.status(200).json(cartData);
-//     } catch (err) {
-//         console.error("Hiba a kosár lekérésekor:", err);
-//         res.status(500).json({ error: 'Szerverhiba' });
-//     }
-// }
+ async function getCart(req, res) {
+     try {
+        const userID = req.user.userID;
+         const cartData = await getCartForUser(userID); // Itt a modellből jövő függvény neve legyen konzisztens!
+        res.status(200).json(cartData);
+     } catch (err) {
+         console.error("Hiba a kosár lekérésekor:", err);
+         res.status(500).json({ error: 'Szerverhiba' });
+     }
+ }
 
-module.exports = { getticketorders, getticketorder, createticketorder, updateticketstatus, deleteticketorder }
+module.exports = { getticketorders, getticketorder, createticketorder, updateticketstatus, deleteticketorder,getCart }
