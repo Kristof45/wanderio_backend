@@ -29,7 +29,7 @@ async function createAtt(cityID, name, description, address, price, image) {
 }
 
 async function updateAtt(attractionID, cityID, name, description, address, price) {
-    const sql = 'UPDATE `attractions` SET `cityID` = COALESCE(NULLIF(?, ""), `cityID`), `name` = COALESCE(NULLIF(?, ""), `name`), `description` = COALESCE(NULLIF(?, ""), `description`), `address` = COALESCE(NULLIF(?, ""), `address`), `price` = COALESCE(NULLIF(?, ""), `price`) WHERE `attractionID`=?'
+    const sql = 'UPDATE `attractions` SET `cityID` = COALESCE(?, `cityID`), `name` = COALESCE(NULLIF(?, ""), `name`), `description` = COALESCE(NULLIF(?, ""), `description`), `address` = COALESCE(NULLIF(?, ""), `address`), `price` = COALESCE(?, `price`) WHERE `attractionID`=?'
     const [result] = await db.query(sql, [cityID, name, description, address, price, attractionID])
 
     return result

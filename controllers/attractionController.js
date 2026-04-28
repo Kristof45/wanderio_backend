@@ -39,7 +39,7 @@ async function updateatt(req, res) {
         await updateAtt(attractionID, cityID, name, description, address, price)
         return res.status(201).json({message: 'Sikeres modositas'})
     } catch (err) {
-        //console.log(err);
+        console.log(err);
         return res.status(500).json({error: 'Hiba az atrakciok modositasakor'})
     }
 }
