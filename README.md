@@ -85,7 +85,8 @@ wanderio_backend/
 + multer
 + mysql2
 + nodemon
-+foto
+
+(https://postimg.cc/BLH1JbM5)
 
 ## Biztonság :
  Hitelesítés: JWT token alapú hielesítés a védett végpontokhoz. A token a localStorage-ban tárolódik a kliens oldalon.
@@ -94,7 +95,7 @@ wanderio_backend/
 
 ## Végpontok :
 Az app.js -be meghívtuk az összes routes fájlt és mint egy közlekedési csomópont igazgatja a végpontokat.
-foto
+(https://postimg.cc/kDw47bWQ)
 
 1. Auth Végpontok
  | Művelet | HTTP | Végpont | Leírás |
@@ -109,7 +110,7 @@ foto
  | Összes felhasználó | GET | /admin/alluser | Az összes regisztrált felhasználó adatainak lekérdezése. (Admin jogosultság szükséges) |
  | Felhasználó módosítása | PUT | /admin/modifyuser/:userID | Adott felhasználó adatainak módosítása ID alapján. (Admin jogosultság szükséges) |
  | Felhasználó törlése | DELETE | /admin/deleteuser/:userID | Adott felhasználó törlése ID alapján. (Admin jogosultság szükséges)
- foto csatolas az osszesrol 
+(https://postimg.cc/YvQBq5J0) 
 
 2. Jegyrendelés Végpontok
  | Művelet | Metódus | Végpont | Leírás |
