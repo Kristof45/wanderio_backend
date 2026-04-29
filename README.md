@@ -86,7 +86,7 @@ wanderio_backend/
 + mysql2
 + nodemon
 
-<img src="https://postimg.cc/BLH1JbM5" alt="API Végpontok Táblázata" width="600">
+![Dependencies](https://postimg.cc/BLH1JbM5)
 
 ## Biztonság :
  Hitelesítés: JWT token alapú hielesítés a védett végpontokhoz. A token a localStorage-ban tárolódik a kliens oldalon.
