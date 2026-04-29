@@ -86,7 +86,7 @@ wanderio_backend/
 + mysql2
 + nodemon
 
-![Dependencies](https://postimg.cc/BLH1JbM5)
+![Dependencies](https://i.postimg.cc/qRZcXCKF/depend.png)
 
 ## Biztonság :
  Hitelesítés: JWT token alapú hielesítés a védett végpontokhoz. A token a localStorage-ban tárolódik a kliens oldalon.
@@ -95,7 +95,7 @@ wanderio_backend/
 
 ## Végpontok :
 Az app.js -be meghívtuk az összes routes fájlt és mint egy közlekedési csomópont igazgatja a végpontokat.
-(https://postimg.cc/kDw47bWQ)
+!(https://i.postimg.cc/yYCSXhdb/kep-2026-04-29-185949309.png)
 
 1. Auth Végpontok
  | Művelet | HTTP | Végpont | Leírás |
@@ -110,7 +110,7 @@ Az app.js -be meghívtuk az összes routes fájlt és mint egy közlekedési cso
  | Összes felhasználó | GET | /admin/alluser | Az összes regisztrált felhasználó adatainak lekérdezése. (Admin jogosultság szükséges) |
  | Felhasználó módosítása | PUT | /admin/modifyuser/:userID | Adott felhasználó adatainak módosítása ID alapján. (Admin jogosultság szükséges) |
  | Felhasználó törlése | DELETE | /admin/deleteuser/:userID | Adott felhasználó törlése ID alapján. (Admin jogosultság szükséges)
-(https://postimg.cc/YvQBq5J0) 
+![Auth végpontok](https://i.postimg.cc/Gm5LzrKF/kep-2026-04-29-190137295.png) 
 
 2. Jegyrendelés Végpontok
  | Művelet | Metódus | Végpont | Leírás |
