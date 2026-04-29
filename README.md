@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/kpisti18/markdownCheatSheet/main/assets/world.png" alt="Wanderio Logo" width="120" height="120">
+  <img src="https://i.postimg.cc/WzYgszgY/world.png" alt="Wanderio Logo" width="120" height="120">
   <h1 align="center">Wanderio - Backend API</h1>
   <p align="center">
     A Wanderio utazásfoglaló platform Node.js alapú, RESTful API szervere.
@@ -81,7 +81,7 @@ A projekt adatbázisa több, egymással összekapcsolt táblából áll, hogy ha
 
 #### Adatbázis diagram:
 <p align="center">
-  <img src="https://via.placeholder.com/1200x800.png?text=Adatbázis+ER+Diagram" alt="Adatbázis diagram">
+  <img src="https://i.postimg.cc/xCsb3BXy/draw-SQL-image-export-2026-04-29-(1).jpg" alt="Adatbázis diagram">
 </p>
 
 <br>
@@ -302,6 +302,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/3wd34wst/kep-2026-04-29-211240341.png" alt="Jegyrendelés végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -343,6 +347,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/PxjFG3Q8/kep-2026-04-29-211554106.png" alt="Légitársaság végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -396,6 +404,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/MT55CWGh/kep-2026-04-29-211714369.png" alt="Repülőjárat végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -437,6 +449,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/MT6bbhY4/kep-2026-04-29-211814087.png" alt="Szállodafoglalás végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -502,6 +518,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/wB0sH3Xp/kep-2026-04-29-211914976.png" alt="Szálloda végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -555,6 +575,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/s2qG1qNx/kep-2026-04-29-212142958.png" alt="Szoba végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -608,6 +632,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/0yHbHhPx/kep-2026-04-29-212239899.png" alt="Város végpontok" width="70%">
+</p>
 </details>
 
 <details>
@@ -661,6 +689,10 @@ Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közle
     </tr>
   </tbody>
 </table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/pLyd8k89/kep-2026-04-29-212338157.png" alt="Látnivaló végpontok" width="70%">
+</p>
 </details>
 
 <br>
