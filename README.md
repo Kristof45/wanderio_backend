@@ -1,225 +1,704 @@
-# Wanderio
-## A projektrõl
-> A Wanderio egy komplex utazásfoglaló platform, amely lehetõvé teszi a felhasználók számára, hogy repülõjegyeket és hotelszobákat keressenek, böngésszenek és foglaljanak le. Az alkalmazás egy modern, két részbõl álló architektúrára épül: egy React alapú, dinamikus frontend felületre, ami a Netlify-on fut, és egy robusztus Node.js backendre, ami a MySQL adatbázissal kommunikál. A projekt célja, hogy egy teljes körû, felhasználóbarát utazási élményt nyújtson, az adminisztrációs felülettõl kezdve egészen a végfelhasználói foglalási folyamatig.
+<div align="center">
+  <img src="https://raw.githubusercontent.com/kpisti18/markdownCheatSheet/main/assets/world.png" alt="Wanderio Logo" width="120" height="120">
+  <h1 align="center">Wanderio - Backend API</h1>
+  <p align="center">
+    A Wanderio utazásfoglaló platform Node.js alapú, RESTful API szervere.
+    <br />
+    <a href="#-végpontok"><strong>Végpontok Dokumentációja »</strong></a>
+  </p>
+</div>
 
-## Készítette
-	Tokai Kristóf (Backend, SQL adatbázis)
-	Hegyi Vendel (Backend)
+<div align="center">
 
-## Fejlesztési környezet
-	Node.js
-	Express.js
-	MySql
-	Cloudinary
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](http://expressjs.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
 
-## Adatbázis
-A projekt adatbázisa több, egymással összekapcsolt táblából áll, hogy hatékonyan kezelje a felhasználókat, városokat, hoteleket, repülõjáratokat és a hozzájuk tartozó rendeléseket.
+</div>
 
-### Táblák listája:
-+ users
-+ cities
-+ hotels
-+ rooms
-+ roomTypes
-+ flights
-+ airlines
-+ attractions
-+ hotelOrders
-+ ticketOrders
-+ cityImage, hotelImage, roomImage, airlineImage, attractionImage (képeket tároló kapcsolótáblák)
+---
 
-## Adatbázis diagram:
+### 📋 Tartalomjegyzék
 
-[Itt illeszd be a projekt adatbázis diagramjának képét]
+- [A Projektről](#-a-projektről)
+- [Készítette](#-készítette)
+- [Technológiai Háttér](#-technológiai-háttér)
+- [Adatbázis](#-adatbázis)
+- [Telepítés és Futtatás](#-telepítés-és-futtatás)
+- [Mappa Struktúra](#-mappa-struktúra)
+- [Függőségek](#-függőségek)
+- [Biztonság](#-biztonság)
+- [Végpontok](#-végpontok)
+- [Tesztelés](#-tesztelés)
+- [Továbbfejlesztési Lehetőségek](#-továbbfejlesztési-lehetőségek)
+- [Frontend Repository](#-frontend-repository)
+- [Használt Eszközök](#-használt-eszközök)
 
-## Backend
-A backend Node.js alapú, Express keretrendszerrel, és egy MySQL adatbázissal kommunikál a mysql2 csomag segítségével. Feladata egy RESTful API biztosítása, amely hidat képez a Netlify-on hosztolt frontend és az adatbázis között. Kezeli a felhasználói hitelesítést, az adatlekérdezéseket, a foglalási logikát és a képfeltöltéseket a Cloudinary felé.
+---
 
-## Telepítés és futtatás:
-git clone https://github.com/Kristof45/wanderio_backend.git
-cd wanderio_backend
-npm install
-npm run dev
+## 📖 A Projektről
 
-## Mappa struktúra:
+> A Wanderio egy komplex utazásfoglaló platform, amely lehetővé teszi a felhasználók számára, hogy repülőjegyeket és hotelszobákat keressenek, böngésszenek és foglaljanak le. Ez a repository a projekt **backend** részét tartalmazza, amely egy modern, két részből álló architektúrára épül: egy React alapú, dinamikus frontend felületre (ami a Netlify-on fut), és egy robusztus Node.js backendre, ami a MySQL adatbázissal kommunikál. A projekt célja, hogy egy teljes körű, felhasználóbarát utazási élményt nyújtson, az adminisztrációs felülettől kezdve egészen a végfelhasználói foglalási folyamatig.
+
+<br>
+
+## 👥 Készítette
+
+| Név | Szerepkör |
+| :--- | :--- |
+| **Tokai Kristóf** | Backend, SQL Adatbázis |
+| **Hegyi Vendel** | Backend |
+
+<br>
+
+## 🛠️ Technológiai Háttér
+
+- `Node.js`
+- `Express.js`
+- `MySQL`
+- `Cloudinary` (képkezeléshez)
+
+<br>
+
+## 🗄️ Adatbázis
+
+A projekt adatbázisa több, egymással összekapcsolt táblából áll, hogy hatékonyan kezelje a felhasználókat, városokat, hoteleket, repülőjáratokat és a hozzájuk tartozó rendeléseket.
+
+#### Táblák listája:
+- `users`
+- `cities`
+- `hotels`
+- `rooms`
+- `roomTypes`
+- `flights`
+- `airlines`
+- `attractions`
+- `hotelOrders`
+- `ticketOrders`
+- `cityImage`, `hotelImage`, `roomImage`, `airlineImage`, `attractionImage` (képeket tároló kapcsolótáblák)
+
+#### Adatbázis diagram:
+<p align="center">
+  <img src="https://via.placeholder.com/1200x800.png?text=Adatbázis+ER+Diagram" alt="Adatbázis diagram">
+</p>
+
+<br>
+
+## 🚀 Telepítés és Futtatás
+
+1.  **Klónozd a repository-t:**
+    ```bash
+    git clone https://github.com/Kristof45/wanderio_backend.git
+    ```
+2.  **Navigálj a projekt mappájába:**
+    ```bash
+    cd wanderio_backend
+    ```
+3.  **Telepítsd a függőségeket:**
+    ```bash
+    npm install
+    ```
+4.  **Indítsd el a szervert fejlesztői módban (nodemon):**
+    ```bash
+    npm run dev
+    ```
+
+<br>
+
+## 📁 Mappa Struktúra
+```
 wanderio_backend/
-	node_modules/
-	 ... -> Használt csomagok fájljai
-	config/
-		dotenvConfig.js
-		cloudinary.js
-	controllers/
-		userController.js
-		hotelController.js
-		...	# További vezérlõk
-	db/
-		db.js
-	middleware/
-		userMiddleware.js # JWT Token autentikáció
-		multerMiddleware.js # Fájlfeldolgozás (képek)
-		adminMiddleware.js # Admin autentikáció
-	models/
-		userModel.js
-		hotelModel.js
-		...	# Adatbázis mûveleteket tartalmazó modellek
-	routes/
-		userRoutes.js
-		hotelRoutes.js
-		...	# API útvonalak definíciói
-	.env  -> Környezeti változók (DB adatok, JWT secret, Cloudinary kulcsok)
-	app.js -> Az alkalmazás belépési pontja (Express konfigurálás)
-	package.json -> Használt csomagok és függõségek
-	package-lock.json -> Függõségek
-	server.js # Szerver indítási fájl (pl. app.js meghívása és futtatása adott porton)
-	.gitignore -> Nem nyomonkövetett fájlok vagy mappák
-	ReadMe.md -> Dokumentáció
+├── node_modules/
+├── config/
+│   ├── cloudinary.js
+│   └── dotenvConfig.js
+├── controllers/
+│   ├── hotelController.js
+│   ├── userController.js
+│   └── ...
+├── db/
+│   └── db.js
+├── middleware/
+│   ├── adminMiddleware.js
+│   ├── multerMiddleware.js
+│   └── userMiddleware.js
+├── models/
+│   ├── hotelModel.js
+│   ├── userModel.js
+│   └── ...
+├── routes/
+│   ├── hotelRoutes.js
+│   ├── userRoutes.js
+│   └── ...
+├── .env
+├── .gitignore
+├── app.js
+├── package.json
+├── package-lock.json
+├── ReadMe.md
+└── server.js
+```
 
-## Használt package-ek :
-+ bcryptjs
-+ cloudinary
-+ cookie-parser
-+ cors
-+ dotenv
-+ express
-+ jsonwebtoken
-+ multer
-+ mysql2
-+ nodemon
+<br>
 
-![Dependencies](https://i.postimg.cc/qRZcXCKF/depend.png)
+## 📦 Függőségek
+- `bcryptjs`
+- `cloudinary`
+- `cookie-parser`
+- `cors`
+- `dotenv`
+- `express`
+- `jsonwebtoken`
+- `multer`
+- `mysql2`
+- `nodemon`
 
-## Biztonság :
- Hitelesítés: JWT token alapú hielesítés a védett végpontokhoz. A token a localStorage-ban tárolódik a kliens oldalon.
- Jelszókezelés: A felhasználói jelszavak a bcryptjs segítségével vannak titkosítva
- Környezeti változók: Minden érzékeny adat (adatbázis jelszó, JWT titkos kulcs, Cloudinary API kulcsok) a .env fájlban van tárolva, és nincs a Git repository-ban.
+<p align="center">
+  <img src="https://i.postimg.cc/qRZcXCKF/depend.png" alt="Dependencies" width="70%">
+</p>
 
-## Végpontok :
-Az app.js -be meghívtuk az összes routes fájlt és mint egy közlekedési csomópont igazgatja a végpontokat.
-!(https://i.postimg.cc/yYCSXhdb/kep-2026-04-29-185949309.png)
+<br>
 
-1. Auth Végpontok
- | Művelet | HTTP | Végpont | Leírás |
- | ------- | ---- | ------- | ------ |
- | Regisztráció | POST | /register | Új felhasználó regisztrálása. |
- | Bejelentkezés | POST | /login | Felhasználó bejelentkezése, JWT token visszaadása. |
- | Saját adatok lekérdezése	| GET | /whoami | A bejelentkezett felhasználó adatainak lekérdezése a token alapján. (Hitelesítés szükséges) |
- | Kijelentkezés | POST | /logout | Felhasználó kijelentkeztetése. (Hitelesítés szükséges) |
- | Jelszó változtatás | PUT | /pswchange | Bejelentkezett felhasználó jelszavának módosítása. (Hitelesítés szükséges) |
- | Név változtatás | PUT	| /namechange | Bejelentkezett felhasználó nevének módosítása. (Hitelesítés szükséges) |
- | E-mail cím változtatás	| PUT	| /emailchange | Bejelentkezett felhasználó e-mail címének módosítása. (Hitelesítés szükséges) |
- | Összes felhasználó | GET | /admin/alluser | Az összes regisztrált felhasználó adatainak lekérdezése. (Admin jogosultság szükséges) |
- | Felhasználó módosítása | PUT | /admin/modifyuser/:userID | Adott felhasználó adatainak módosítása ID alapján. (Admin jogosultság szükséges) |
- | Felhasználó törlése | DELETE | /admin/deleteuser/:userID | Adott felhasználó törlése ID alapján. (Admin jogosultság szükséges)
-![Auth végpontok](https://i.postimg.cc/Gm5LzrKF/kep-2026-04-29-190137295.png) 
+## 🛡️ Biztonság
 
-2. Jegyrendelés Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Összes rendelés lekérdezése | GET | /getticketorders | Az összes jegyrendelés adatainak lekérdezése. (Valószínűleg admin jogosultság szükséges) |
- | Kosár lekérdezése | GET | /getcart/:userID | Egy adott felhasználó kosarának tartalmának lekérdezése a felhasználó ID-ja alapján. |
- | Jegyrendelés létrehozása | POST | /createticketorder | Új jegyrendelés leadása a kosár tartalma alapján. |
- | Rendelés állapotának frissítése | PUT | /updateticketstatus/:orderID | Egy meglévő jegyrendelés állapotának módosítása (pl. fizetve, teljesítve). (Admin jogosultság szükséges) |
- | Jegyrendelés törlése | DELETE | /deleteticketorder/:orderID | Egy jegyrendelés törlése azonosító alapján. (Hitelesítés szükséges, a felhasználó valószínűleg a sajátját törölheti). |
+- **Hitelesítés:** JWT token alapú hitelesítés a védett végpontokhoz. A token a `localStorage`-ban tárolódik a kliens oldalon.
+- **Jelszókezelés:** A felhasználói jelszavak a `bcryptjs` segítségével vannak hashelve és sózva.
+- **Környezeti változók:** Minden érzékeny adat (adatbázis jelszó, JWT titkos kulcs, Cloudinary API kulcsok) a `.env` fájlban van tárolva, és a `.gitignore` segítségével nincs a Git repository-ban.
 
-3. Légitársaság Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Légitársaságok lekérdezése | GET | /getairlines | Az összes légitársaság adatainak lekérdezése. |
- | Légitársaság létrehozása	| POST | /createairline | Új légitársaság felvétele az adatbázisba. ( Admin jogosultság szükséges) |
- | Légitársaság módosítása | PUT | /updateairline/:airlineID | Egy meglévő légitársaság adatainak módosítása azonosító alapján. ( Admin jogosultság szükséges) |
-  | Légitársaság törlése | DELETE | /deleteairline/:airlineID | Egy légitársaság törlése az adatbázisból azonosító alapján. ( Admin jogosultság szükséges) |
+---
 
-4. Flights Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Összes járat listázása | GET | /getallflights | Az összes publikusan elérhető repülőjárat listázása. |
- | Egyszerű járatkeresés | GET | /searchflight | Repülőjáratok keresése egyszerűbb feltételek alapján. |
- | Részletes járatkeresés GET | /search | Repülőjáratok keresése részletes szűrőkkel (pl. indulás, érkezés, dátum). |
- | Járatfoglalás | POST | /book | Új járatfoglalás létrehozása. (Hitelesítés szükséges) |
- | Járatok listázása | GET | /adgetflights | Az összes járat lekérdezése adminisztrátori felülethez, több adattal. (Admin jogosultság szükséges) |
- | Járat módosítása | PUT | /updateflight/:flightsId | Egy meglévő járat adatainak frissítése azonosító alapján. (Admin jogosultság szükséges) |
- | Járat törlése | DELETE | /deleteflight/:flightsId | Egy járat törlése az adatbázisból azonosító alapján. (Admin jogosultság szükséges) |
+## 🔌 Végpontok
 
-5. Szállodafoglalás Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Összes szállodafoglalás | GET | /gethotelord | Az összes szállodafoglalás adatainak lekérdezése. (Valószínűleg admin jogosultság szükséges) |
- | Szállodafoglalás létrehozása | POST | /createhotelord | Új szállodafoglalás létrehozása. |
- | Foglalás állapotának frissítése | PUT | /updatehotordstat/:orderID | Egy meglévő szállodafoglalás állapotának módosítása (pl. fizetve, lemondva). (Admin jogosultság szükséges) |
- | Szállodafoglalás törlése	DELETE | /deletehotelord/:orderID | Egy szállodafoglalás törlése azonosító alapján. (Hitelesítés szükséges, a felhasználó a sajátját törölheti). |
+Az `app.js` fájlban hívjuk meg az összes `routes` fájlt, és mint egy közlekedési csomópont, ez a fájl igazgatja a beérkező kéréseket a megfelelő végpontokhoz.
+<p align="center">
+  <img src="https://i.postimg.cc/yYCSXhdb/kep-2026-04-29-185949309.png" alt="Routes" width="70%">
+</p>
 
-6. Szálloda Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Szállodák listázása | GET | /gethotels | Az összes publikusan elérhető szálloda listázása böngészéshez. |
- | Szállodatípusok listázása | GET | /gethoteltypes | Az elérhető szállodatípusok (pl. 5 csillagos, apartman) lekérdezése. |
- | Szálloda részletei | GET | /details/:hotelID | Egy konkrét szálloda részletes adatainak lekérdezése azonosító alapján. |
- | Szállodafoglalás | POST | /book | Új szállodafoglalás létrehozása egy adott hotelbe. (Hitelesítés szükséges) |
- | Szállodák listázása | GET | /admin/getadhotel | Az összes szálloda lekérdezése adminisztrátori felülethez, részletesebb adatokkal. (Admin jogosultság szükséges) |
- | Szálloda létrehozása | POST | /createhotel | Új szálloda létrehozása, maximum 5 kép egyidejű feltöltésével. (Admin jogosultság szükséges) |
- | Kép(ek) feltöltése | POST | /upload-image/:hotelID | Képek hozzáadása egy meglévő szállodához, max. 5 kép egyidejű feltöltésével. (Admin jogosultság szükséges) |
- | Szálloda módosítása | PUT | /updatehotel/:hotelID | Egy meglévő szálloda adatainak frissítése azonosító alapján. (Admin jogosultság szükséges) |
- | Szálloda törlése	DELETE | /deletehotel/:hotelID | Egy szálloda törlése az adatbázisból azonosító alapján. (Admin jogosultság szükséges) |
+<details>
+<summary><strong>1. 🔑 Auth Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Regisztráció</td>
+      <td><code>POST</code></td>
+      <td><code>/register</code></td>
+      <td>Új felhasználó regisztrálása.</td>
+    </tr>
+    <tr>
+      <td>Bejelentkezés</td>
+      <td><code>POST</code></td>
+      <td><code>/login</code></td>
+      <td>Felhasználó bejelentkezése, JWT token visszaadása.</td>
+    </tr>
+    <tr>
+      <td>Saját adatok lekérdezése</td>
+      <td><code>GET</code></td>
+      <td><code>/whoami</code></td>
+      <td>A bejelentkezett felhasználó adatainak lekérdezése a token alapján. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kijelentkezés</td>
+      <td><code>POST</code></td>
+      <td><code>/logout</code></td>
+      <td>Felhasználó kijelentkeztetése. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Jelszó változtatás</td>
+      <td><code>PUT</code></td>
+      <td><code>/pswchange</code></td>
+      <td>Bejelentkezett felhasználó jelszavának módosítása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Név változtatás</td>
+      <td><code>PUT</code></td>
+      <td><code>/namechange</code></td>
+      <td>Bejelentkezett felhasználó nevének módosítása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>E-mail cím változtatás</td>
+      <td><code>PUT</code></td>
+      <td><code>/emailchange</code></td>
+      <td>Bejelentkezett felhasználó e-mail címének módosítása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Összes felhasználó</td>
+      <td><code>GET</code></td>
+      <td><code>/admin/alluser</code></td>
+      <td>Az összes regisztrált felhasználó adatainak lekérdezése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Felhasználó módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/admin/modifyuser/:userID</code></td>
+      <td>Adott felhasználó adatainak módosítása ID alapján. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Felhasználó törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/admin/deleteuser/:userID</code></td>
+      <td>Adott felhasználó törlése ID alapján. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<p align="center">
+  <img src="https://i.postimg.cc/Gm5LzrKF/kep-2026-04-29-190137295.png" alt="Auth végpontok" width="70%">
+</p>
+</details>
 
-7. Szoba Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Szobák listázása | GET | /getrooms | Az összes publikusan elérhető szoba listázása. |
- | Szobák listázása | GET | /adgetroom | Az összes szoba lekérdezése adminisztrátori felülethez, részletesebb adatokkal. (Admin jogosultság szükséges) |
- | Szoba létrehozása | POST | /createroom | Új szoba létrehozása az adatbázisban. (Admin jogosultság szükséges) |
- | Kép(ek) feltöltése | POST | /upload-image/:roomId | Képek hozzáadása egy meglévő szobához, max. 5 kép egyidejű feltöltésével. (Admin jogosultság szükséges) |
- | Szoba módosítása | PUT | /updateroom/:roomId | Egy meglévő szoba adatainak frissítése azonosító alapján. (Admin jogosultság szükséges) |
- | Szoba törlése | DELETE | /deleteroom/:roomId | Egy szoba törlése az adatbázisból azonosító alapján. (Admin jogosultság szükséges) |
+<details>
+<summary><strong>2. 🎟️ Jegyrendelés Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Összes rendelés lekérdezése</td>
+      <td><code>GET</code></td>
+      <td><code>/getticketorders</code></td>
+      <td>Az összes jegyrendelés adatainak lekérdezése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kosár lekérdezése</td>
+      <td><code>GET</code></td>
+      <td><code>/getcart/:userID</code></td>
+      <td>Egy adott felhasználó kosarának tartalmának lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Jegyrendelés létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createticketorder</code></td>
+      <td>Új jegyrendelés leadása a kosár tartalma alapján.</td>
+    </tr>
+    <tr>
+      <td>Rendelés állapotának frissítése</td>
+      <td><code>PUT</code></td>
+      <td><code>/updateticketstatus/:orderID</code></td>
+      <td>Egy meglévő jegyrendelés állapotának módosítása. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Jegyrendelés törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deleteticketorder/:orderID</code></td>
+      <td>Egy jegyrendelés törlése. (Hitelesítés szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-8. Város Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Városok listázása | GET | /getcities | Az összes város adatainak lekérdezése. |
- | Város lekérdezése ID alapján | GET | /getcities/:cityID | Egy konkrét város alap adatainak lekérdezése azonosító alapján. |
- | Város részletei | GET | /detail/:cityID | Egy konkrét város részletes adatlapjának lekérdezése azonosító alapján (pl. képekkel, leírással). |
- | Város létrehozása | POST | /createcity | Új város felvétele az adatbázisba. (Valószínűleg admin jogosultság szükséges) |
- | Kép(ek) feltöltése | POST | /upload-image/:cityID | Képek hozzáadása egy meglévő városhoz, max. 5 kép egyidejű feltöltésével. (Admin jogosultság szükséges) |
- | Város módosítása | PUT | /updatecity/:cityID | Egy meglévő város adatainak frissítése azonosító alapján. (Admin jogosultság szükséges) |
- | Város törlése | DELETE | /deletecity/:cityID | Egy város törlése az adatbázisból azonosító alapján. (Admin jogosultság szükséges) |
+<details>
+<summary><strong>3. 🏢 Légitársaság Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Légitársaságok lekérdezése</td>
+      <td><code>GET</code></td>
+      <td><code>/getairlines</code></td>
+      <td>Az összes légitársaság adatainak lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Légitársaság létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createairline</code></td>
+      <td>Új légitársaság felvétele. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Légitársaság módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updateairline/:airlineID</code></td>
+      <td>Egy meglévő légitársaság adatainak módosítása. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Légitársaság törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deleteairline/:airlineID</code></td>
+      <td>Egy légitársaság törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-9. Látnivaló Végpontok
- | Művelet | Metódus | Végpont | Leírás |
- | ------- | ------- | ------- | ------ |
- | Látnivalók listázása | GET | /getatt	Az összes látnivaló alap adatainak lekérdezése. | 
- | Látnivalók képekkel | GET | /getattimg | A látnivalók listázása a hozzájuk tartozó képekkel. |
- | Látnivaló létrehozása | POST | /createatt | Új látnivaló felvétele az adatbázisba. (Valószínűleg admin jogosultság szükséges) |
- | Kép(ek) feltöltése | POST | /upload-image/:attractionID | Képek hozzáadása egy meglévő látnivalóhoz, max. 5 kép egyidejű feltöltésével. (Admin jogosultság szükséges) |
- | Látnivaló módosítása | PUT | /updateatt/:attractionID | Egy meglévő látnivaló adatainak frissítése azonosító alapján. (Admin jogosultság szükséges) |
- | Látnivaló törlése | DELETE | /deleteatt/:attractionID | Egy látnivaló törlése az adatbázisból azonosító alapján. (Admin jogosultság szükséges) |
+<details>
+<summary><strong>4. ✈️ Repülőjárat Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Összes járat listázása</td>
+      <td><code>GET</code></td>
+      <td><code>/getallflights</code></td>
+      <td>Az összes publikusan elérhető repülőjárat listázása.</td>
+    </tr>
+    <tr>
+      <td>Részletes járatkeresés</td>
+      <td><code>GET</code></td>
+      <td><code>/search</code></td>
+      <td>Repülőjáratok keresése részletes szűrőkkel (indulás, érkezés, dátum).</td>
+    </tr>
+    <tr>
+      <td>Járatfoglalás</td>
+      <td><code>POST</code></td>
+      <td><code>/book</code></td>
+      <td>Új járatfoglalás létrehozása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Járatok listázása (Admin)</td>
+      <td><code>GET</code></td>
+      <td><code>/adgetflights</code></td>
+      <td>Az összes járat lekérdezése adminisztrátori felülethez. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Járat módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updateflight/:flightsId</code></td>
+      <td>Egy meglévő járat adatainak frissítése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Járat törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deleteflight/:flightsId</code></td>
+      <td>Egy járat törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
+<details>
+<summary><strong>5. 🏨 Szállodafoglalás Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Összes szállodafoglalás</td>
+      <td><code>GET</code></td>
+      <td><code>/gethotelord</code></td>
+      <td>Az összes szállodafoglalás adatainak lekérdezése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szállodafoglalás létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createhotelord</code></td>
+      <td>Új szállodafoglalás létrehozása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Foglalás állapotának frissítése</td>
+      <td><code>PUT</code></td>
+      <td><code>/updatehotordstat/:orderID</code></td>
+      <td>Egy meglévő szállodafoglalás állapotának módosítása. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szállodafoglalás törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deletehotelord/:orderID</code></td>
+      <td>Egy szállodafoglalás törlése. (Hitelesítés szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-## Tesztelés :
-[Postmanben tesztelés](https://documenter.getpostman.com/view/48099677/2sBXqJJfp1)
+<details>
+<summary><strong>6. 🏩 Szálloda Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Szállodák listázása</td>
+      <td><code>GET</code></td>
+      <td><code>/gethotels</code></td>
+      <td>Az összes publikusan elérhető szálloda listázása.</td>
+    </tr>
+    <tr>
+      <td>Szálloda részletei</td>
+      <td><code>GET</code></td>
+      <td><code>/details/:hotelID</code></td>
+      <td>Egy konkrét szálloda részletes adatainak lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Szállodafoglalás</td>
+      <td><code>POST</code></td>
+      <td><code>/book</code></td>
+      <td>Új szállodafoglalás létrehozása. (Hitelesítés szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szállodák listázása (Admin)</td>
+      <td><code>GET</code></td>
+      <td><code>/admin/getadhotel</code></td>
+      <td>Az összes szálloda lekérdezése admin felülethez. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szálloda létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createhotel</code></td>
+      <td>Új szálloda létrehozása, max. 5 kép feltöltésével. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kép(ek) feltöltése</td>
+      <td><code>POST</code></td>
+      <td><code>/upload-image/:hotelID</code></td>
+      <td>Képek hozzáadása meglévő szállodához. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szálloda módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updatehotel/:hotelID</code></td>
+      <td>Egy meglévő szálloda adatainak frissítése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szálloda törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deletehotel/:hotelID</code></td>
+      <td>Egy szálloda törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-A projekt jelenleg manuálisan, a frontend felületen keresztül és a böngészõ fejlesztõi eszközeivel tesztelhetõ. A backend végpontok külön-külön tesztelhetõk a Postman alkalmazással.
+<details>
+<summary><strong>7. 🛏️ Szoba Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Szobák listázása</td>
+      <td><code>GET</code></td>
+      <td><code>/getrooms</code></td>
+      <td>Az összes publikusan elérhető szoba listázása.</td>
+    </tr>
+    <tr>
+      <td>Szobák listázása (Admin)</td>
+      <td><code>GET</code></td>
+      <td><code>/adgetroom</code></td>
+      <td>Az összes szoba lekérdezése admin felülethez. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szoba létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createroom</code></td>
+      <td>Új szoba létrehozása. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kép(ek) feltöltése</td>
+      <td><code>POST</code></td>
+      <td><code>/upload-image/:roomId</code></td>
+      <td>Képek hozzáadása meglévő szobához. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szoba módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updateroom/:roomId</code></td>
+      <td>Egy meglévő szoba adatainak frissítése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Szoba törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deleteroom/:roomId</code></td>
+      <td>Egy szoba törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-## Továbbfejlesztési lehetőség :
-drawsqlbol foto ket tabla megjelolese
-1. Légitársaság logók feltöltése
+<details>
+<summary><strong>8. 🏙️ Város Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Városok listázása</td>
+      <td><code>GET</code></td>
+      <td><code>/getcities</code></td>
+      <td>Az összes város adatainak lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Város részletei</td>
+      <td><code>GET</code></td>
+      <td><code>/detail/:cityID</code></td>
+      <td>Egy város részletes adatlapjának lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Város létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createcity</code></td>
+      <td>Új város felvétele. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kép(ek) feltöltése</td>
+      <td><code>POST</code></td>
+      <td><code>/upload-image/:cityID</code></td>
+      <td>Képek hozzáadása meglévő városhoz. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Város módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updatecity/:cityID</code></td>
+      <td>Egy meglévő város adatainak frissítése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Város törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deletecity/:cityID</code></td>
+      <td>Egy város törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-Cél: A légitársaságok listájának és a járatoknak a vizuális megjelenítése a cégek logóival.
-Előny: Professzionálisabb megjelenés, gyorsabb felismerhetőség a felhasználók számára.
+<details>
+<summary><strong>9. 🗿 Látnivaló Végpontok</strong></summary>
+<br>
+<table>
+  <thead>
+    <tr>
+      <th>Művelet</th>
+      <th>HTTP</th>
+      <th>Végpont</th>
+      <th>Leírás</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Látnivalók listázása</td>
+      <td><code>GET</code></td>
+      <td><code>/getatt</code></td>
+      <td>Az összes látnivaló alap adatainak lekérdezése.</td>
+    </tr>
+    <tr>
+      <td>Látnivalók képekkel</td>
+      <td><code>GET</code></td>
+      <td><code>/getattimg</code></td>
+      <td>A látnivalók listázása a hozzájuk tartozó képekkel.</td>
+    </tr>
+    <tr>
+      <td>Látnivaló létrehozása</td>
+      <td><code>POST</code></td>
+      <td><code>/createatt</code></td>
+      <td>Új látnivaló felvétele. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Kép(ek) feltöltése</td>
+      <td><code>POST</code></td>
+      <td><code>/upload-image/:attractionID</code></td>
+      <td>Képek hozzáadása meglévő látnivalóhoz. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Látnivaló módosítása</td>
+      <td><code>PUT</code></td>
+      <td><code>/updateatt/:attractionID</code></td>
+      <td>Egy meglévő látnivaló adatainak frissítése. (Admin jogosultság szükséges)</td>
+    </tr>
+    <tr>
+      <td>Látnivaló törlése</td>
+      <td><code>DELETE</code></td>
+      <td><code>/deleteatt/:attractionID</code></td>
+      <td>Egy látnivaló törlése. (Admin jogosultság szükséges)</td>
+    </tr>
+  </tbody>
+</table>
+</details>
 
-2. Szobatípusok kezelése
+<br>
 
-Cél: Az egyes szobák helyett általános "szobatípusok" (pl. Standard, Lakosztály) bevezetése, és a szállodákhoz darabszám szerint történő hozzárendelése.
-Előny: Egyszerűbb adminisztráció (nem kell 100 egyforma szobát felvinni), jobb szűrhetőség a felhasználóknak, és könnyebb árazás típusonként.
+## 🧪 Tesztelés
 
-## Frontend
-[Frontend](https://github.com/vendel1123/WanderioFrontend)
+A végpontok manuálisan tesztelhetők a **Postman** alkalmazással.
 
-## Használt eszközök
-+ VS code
-+ NPM
-+ Postman
-+ DrawSQL
-+ W3Schools
-+ GitHub
-+ PhpMyAdmin
-+ Gemini
-+ ChatGPT
+> **Postman Dokumentáció:** [https://documenter.getpostman.com/view/48099677/2sBXqJJfp1](https://documenter.getpostman.com/view/48099677/2sBXqJJfp1)
+
+<br>
+
+## 💡 Továbbfejlesztési Lehetőségek
+
+1.  **Légitársaság logók feltöltése**
+    > Cél: A légitársaságok listájának és a járatoknak a vizuális megjelenítése a cégek logóival.
+    > Előny: Professzionálisabb megjelenés, gyorsabb felismerhetőség a felhasználók számára.
+
+2.  **Szobatípusok kezelése**
+    > Cél: Az egyes szobák helyett általános "szobatípusok" (pl. Standard, Lakosztály) bevezetése, és a szállodákhoz darabszám szerint történő hozzárendelése.
+    > Előny: Egyszerűbb adminisztráció, jobb szűrhetőség a felhasználóknak, és könnyebb árazás típusonként.
+
+<br>
+
+## 🖥️ Frontend Repository
+
+A projekt frontend részének repository-ja itt érhető el:
+> [https://github.com/vendel1123/WanderioFrontend](https://github.com/vendel1123/WanderioFrontend)
+
+<br>
+
+## 🧰 Használt Eszközök
+- VS Code
+- NPM
+- Postman
+- DrawSQL
+- W3Schools
+- GitHub
+- PhpMyAdmin
+- Gemini
+- ChatGPT
